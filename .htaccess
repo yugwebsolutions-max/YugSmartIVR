@@ -1,0 +1,80 @@
+# ==============================================================================
+# YUG SMART IVR - ENTERPRISE SECURITY & SERVER HARDENING (.htaccess)
+# ==============================================================================
+
+# 1. PREVENT DIRECTORY BROWSING & FILE LISTING
+Options -Indexes
+
+# 2. BLOCK ACCESS TO SENSITIVE CONFIGURATION, LOG & DATA FILES
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op]|env|git.*|json|md)|composer\.json|package\.json|server\.js)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Specifically protect leads data files from any external direct downloads
+<Files "leads.json">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</Files>
+
+<Files "leads_log.json">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</Files>
+
+# 3. HTTP SECURITY HEADERS
+<IfModule mod_headers.c>
+    # Prevent Clickjacking by restricting framing to same origin
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Prevent MIME-type sniffing attacks
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Enable XSS filtering in browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Strict referrer policy (protects lead source data)
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Disable unnecessary browser permissions/hardware access
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Remove server fingerprinting
+    Header unset X-Powered-By
+</IfModule>
+
+# 4. PREVENT CROSS-SITE TRACING (XST)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block HTTP TRACE / TRACK methods
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
+    RewriteRule .* - [F]
+
+    # Block access to hidden dot files (.git, .env, etc.)
+    RewriteRule (^|/)\.(?!well-known) - [F]
+</IfModule>
+
+# 5. CACHING HEADERS FOR HIGH PERFORMANCE & ASSET INTEGRITY
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

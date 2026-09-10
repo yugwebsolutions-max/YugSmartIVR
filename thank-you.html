@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You | Yug Smart IVR</title>
+    <!-- Enterprise Security & Anti-Framing Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/webp" href="assets/yug-logo.webp">
     <link rel="apple-touch-icon" href="assets/yug-logo.webp">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chatbot/bot.css">
+    <script src="api/security.js" defer></script>
+    <script src="api/lead-service.js" defer></script>
+    <script src="chatbot/bot-knowledge.js" defer></script>
+    <script src="chatbot/bot.js" defer></script>
     <style>
         .thank-you-section {
             min-height: 80vh;
@@ -233,11 +243,22 @@
     </footer>
 
 
-    <!-- Footer Navigation Links -->
+    <!-- Lead Service & Dynamic Content Script -->
+    <script src="api/lead-service.js"></script>
     <script>
         try {
-            const leadName = sessionStorage.getItem('yug_lead_name');
-            const leadReq = sessionStorage.getItem('yug_lead_req');
+            let leadName = sessionStorage.getItem('yug_lead_name');
+            let leadReq = sessionStorage.getItem('yug_lead_req');
+            
+            // Fallback from persistent JSON tracker if sessionStorage is empty
+            if (!leadName && window.LeadService) {
+                const leads = window.LeadService.getTrackedLeads();
+                if (leads && leads.length > 0) {
+                    leadName = leads[0].name;
+                    leadReq = leads[0].requirement;
+                }
+            }
+
             if (leadName) {
                 document.querySelector('.thank-you-card h1').textContent = `Thank You, ${leadName}!`;
             }
@@ -245,6 +266,7 @@
                 document.querySelector('.thank-you-card p.lead').innerHTML = `We have received your enquiry for <strong>${leadReq}</strong>. Our telecommunications hardware specialist will contact you on your mobile number shortly with complete pricing and demonstration details.`;
             }
         } catch(e) {}
+
         document.querySelectorAll(".dynamic-year").forEach(el => {
             el.textContent = new Date().getFullYear();
         });

@@ -1,0 +1,770 @@
+/**
+ * ============================================================================
+ * YUG SMART IVR - CHATBOT WIDGET STYLESHEET
+ * ============================================================================
+ * Theme Colors:
+ *  - Primary Emerald: #009640
+ *  - Primary Hover:   #10b981
+ *  - Slate Dark:      #161b20
+ *  - Tint Light:      #eafaf1
+ *  - Text Dark:       #111827
+ *  - Border Subtle:   #e5e7eb
+ * ============================================================================
+ */
+
+/* ----------------------------------------------------
+   1. FLOATING LAUNCHER & TEASER BUBBLE
+   ---------------------------------------------------- */
+.yug-bot-launcher-wrap {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none; /* children enable pointer events */
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Floating Teaser Greeting Bubble */
+.yug-bot-teaser {
+    pointer-events: auto;
+    background: #ffffff;
+    color: #161b20;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 150, 64, 0.2);
+    margin-bottom: 12px;
+    max-width: 250px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform-origin: bottom right;
+    animation: yugTeaserFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.yug-bot-teaser:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.yug-bot-teaser-close {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-left: auto;
+    transition: color 0.2s;
+}
+
+.yug-bot-teaser-close:hover {
+    color: #ef4444;
+}
+
+@keyframes yugTeaserFadeIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.92); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Main Launcher Circle Button */
+.yug-bot-launcher-btn {
+    pointer-events: auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #009640 0%, #0d833b 100%);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 150, 64, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.3s ease;
+    position: relative;
+}
+
+.yug-bot-launcher-btn:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 150, 64, 0.55);
+}
+
+.yug-bot-launcher-btn:active {
+    transform: scale(0.95);
+}
+
+/* Online Pulse Dot */
+.yug-bot-pulse-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: #10b981;
+    border: 2.5px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: yugPulseDot 2s infinite;
+}
+
+@keyframes yugPulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.yug-bot-icon-chat,
+.yug-bot-icon-close {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.yug-bot-icon-close {
+    display: none;
+}
+
+.yug-bot-launcher-btn.is-active .yug-bot-icon-chat {
+    display: none;
+}
+
+.yug-bot-launcher-btn.is-active .yug-bot-icon-close {
+    display: block;
+    transform: rotate(90deg);
+}
+
+/* ----------------------------------------------------
+   2. CHAT WINDOW CONTAINER
+   ---------------------------------------------------- */
+.yug-bot-window {
+    position: fixed;
+    bottom: 96px;
+    right: 24px;
+    width: 395px;
+    max-width: calc(100vw - 32px);
+    height: 610px;
+    max-height: calc(100vh - 120px);
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transform-origin: bottom right;
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.yug-bot-window.is-open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ----------------------------------------------------
+   3. CHAT HEADER
+   ---------------------------------------------------- */
+.yug-bot-header {
+    background: #161b20;
+    color: #ffffff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #009640;
+    position: relative;
+}
+
+.yug-bot-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.yug-bot-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+
+.yug-bot-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.yug-bot-info h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.yug-bot-info h3 span {
+    color: #009640;
+}
+
+.yug-bot-status {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.yug-bot-status::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #10b981;
+    border-radius: 50%;
+}
+
+.yug-bot-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.yug-bot-header-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #cbd5e1;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.yug-bot-header-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.yug-bot-header-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ----------------------------------------------------
+   4. CHAT BODY & MESSAGE STREAM
+   ---------------------------------------------------- */
+.yug-bot-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px 12px;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+}
+
+.yug-bot-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.yug-bot-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* Timestamp divider */
+.yug-bot-time-divider {
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+    margin: 2px 0;
+    font-weight: 500;
+}
+
+/* Message Rows */
+.yug-bot-msg-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    animation: yugMsgSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.yug-bot-msg-row.user-row {
+    flex-direction: row-reverse;
+}
+
+@keyframes yugMsgSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.yug-bot-msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+}
+
+.yug-bot-msg-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.yug-bot-msg-bubble {
+    max-width: 82%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Bot Bubble */
+.yug-bot-msg-row.bot-row .yug-bot-msg-bubble {
+    background: #ffffff;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    border-top-left-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* User Bubble */
+.yug-bot-msg-row.user-row .yug-bot-msg-bubble {
+    background: linear-gradient(135deg, #009640 0%, #0d833b 100%);
+    color: #ffffff;
+    border-top-right-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 150, 64, 0.25);
+}
+
+.yug-bot-msg-bubble p {
+    margin: 0 0 8px;
+}
+
+.yug-bot-msg-bubble p:last-child {
+    margin-bottom: 0;
+}
+
+.yug-bot-msg-bubble strong {
+    font-weight: 700;
+}
+
+/* Markdown tables in bot replies */
+.yug-bot-msg-bubble table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 11.5px;
+}
+
+.yug-bot-msg-bubble th,
+.yug-bot-msg-bubble td {
+    border: 1px solid #e2e8f0;
+    padding: 5px 6px;
+    text-align: left;
+}
+
+.yug-bot-msg-bubble th {
+    background: #f1f5f9;
+    font-weight: 600;
+}
+
+/* Quick Suggestion Chips */
+.yug-bot-chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.yug-bot-chip-btn {
+    background: #eafaf1;
+    color: #065f46;
+    border: 1px solid rgba(0, 150, 64, 0.25);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, color 0.2s;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.yug-bot-chip-btn:hover {
+    background: #009640;
+    color: #ffffff;
+    transform: translateY(-1px);
+    border-color: #009640;
+}
+
+/* Typing Indicator Animation */
+.yug-bot-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    border-top-left-radius: 4px;
+    width: fit-content;
+}
+
+.yug-bot-typing-dot {
+    width: 7px;
+    height: 7px;
+    background: #94a3b8;
+    border-radius: 50%;
+    animation: yugTypingBounce 1.4s infinite ease-in-out;
+}
+
+.yug-bot-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.yug-bot-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes yugTypingBounce {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; background: #009640; }
+}
+
+/* ----------------------------------------------------
+   5. IN-CHAT LEAD CAPTURE FORM
+   ---------------------------------------------------- */
+.yug-bot-form-card {
+    background: #ffffff;
+    border: 1.5px solid #009640;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 8px;
+    box-shadow: 0 4px 14px rgba(0, 150, 64, 0.12);
+}
+
+.yug-bot-form-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.yug-bot-form-group {
+    margin-bottom: 10px;
+}
+
+.yug-bot-form-group label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.yug-bot-input-wrap {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+}
+
+.yug-bot-prefix {
+    background: #f1f5f9;
+    border: 1px solid #d1d5db;
+    border-right: none;
+    padding: 0 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #374151;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.yug-bot-input,
+.yug-bot-select {
+    width: 100%;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: #111827;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.yug-bot-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+    cursor: pointer;
+}
+
+.yug-bot-input-wrap .yug-bot-input {
+    flex: 1 1 auto;
+    width: 1%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid #d1d5db;
+}
+
+.yug-bot-input:focus,
+.yug-bot-select:focus {
+    border-color: #009640;
+    box-shadow: 0 0 0 2px rgba(0, 150, 64, 0.15);
+}
+
+.yug-bot-error-text {
+    color: #dc2626;
+    font-size: 10.5px;
+    font-weight: 500;
+    display: none;
+    margin-top: 2px;
+}
+
+.yug-bot-form-submit {
+    width: 100%;
+    background: #009640;
+    color: #ffffff;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.yug-bot-form-submit:hover {
+    background: #10b981;
+    transform: translateY(-1px);
+}
+
+.yug-bot-form-submit:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Success Card after Lead Submit */
+.yug-bot-success-card {
+    background: #eafaf1;
+    border: 1px solid #10b981;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.yug-bot-success-card h4 {
+    margin: 0 0 4px;
+    color: #065f46;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.yug-bot-success-card p {
+    margin: 0 0 10px;
+    font-size: 11.5px;
+    color: #047857;
+}
+
+.yug-bot-success-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.yug-bot-action-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.yug-bot-call-btn {
+    background: #009640;
+    color: #ffffff;
+}
+
+.yug-bot-wa-btn {
+    background: #25d366;
+    color: #ffffff;
+}
+
+/* ----------------------------------------------------
+   6. CHAT INPUT FOOTER
+   ---------------------------------------------------- */
+.yug-bot-footer {
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.yug-bot-input-field {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 10px 16px;
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+    color: #1e293b;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.yug-bot-input-field:focus {
+    border-color: #009640;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 150, 64, 0.1);
+}
+
+.yug-bot-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #009640;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+}
+
+.yug-bot-send-btn:hover {
+    background: #10b981;
+    transform: scale(1.05);
+}
+
+.yug-bot-send-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.yug-bot-send-btn svg {
+    width: 18px;
+    height: 18px;
+    margin-left: 2px;
+}
+
+/* ----------------------------------------------------
+   7. SCROLL-TO-TOP BUTTON ADJUSTMENT
+   ---------------------------------------------------- */
+/* Move scroll to top button higher so it never collides with chat widget on desktop */
+#scrollTopBtn {
+    bottom: 96px !important;
+    right: 28px !important;
+    z-index: 9998 !important;
+}
+
+/* ----------------------------------------------------
+   8. MOBILE RESPONSIVE
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+    #scrollTopBtn {
+        display: none !important; /* Hide scroll to top on mobile to avoid stacking clutter */
+    }
+
+    .yug-bot-launcher-wrap {
+        bottom: 18px;
+        right: 16px;
+    }
+
+    .yug-bot-launcher-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .yug-bot-teaser {
+        max-width: 220px;
+        font-size: 12px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+    }
+
+    .yug-bot-window {
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        max-width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .yug-bot-header {
+        padding: 14px 16px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
