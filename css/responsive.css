@@ -1,0 +1,894 @@
+/**
+ * ============================================================================
+ * YUG SMART IVR - UNIFIED RESPONSIVE STYLESHEET (ALL DEVICES)
+ * ============================================================================
+ * Designed & Optimized for:
+ *   - Mobile Devices (Small < 380px, Medium 380px-480px, Large 481px-768px)
+ *   - Tablets (769px - 1024px, Portrait & Landscape)
+ *   - Laptops & Notebooks (1025px - 1366px, & Short Heights <= 760px)
+ *   - PC Desktops & Widescreens (> 1366px)
+ *
+ * Provides:
+ *   1. Responsive 360° Hardware Viewer & Fullscreen Lightbox Modal
+ *   2. Short-Viewport (Laptop) Auto-Fit (Zero Bottom Overflow / Cutoffs)
+ *   3. Touch-Optimized Mobile Controls, Thumbnails & Action Stacks
+ *   4. Blue Focus Ring Elimination on Chevrons & Interactive Elements
+ *   5. Site-wide Grid, Form & Table Responsive Enhancements
+ * ============================================================================
+ */
+
+/* ==========================================================================
+   1. INTERACTIVE 360° VIEWER MODAL - BASE & UNIVERSAL STYLES
+   ========================================================================== */
+
+.modal-backdrop-360 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.modal-backdrop-360.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Main Card Container */
+.modal-360-card {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 960px;
+    max-height: min(92vh, 740px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.35), 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    transform: scale(0.96) translateY(12px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    position: relative;
+}
+
+.modal-backdrop-360.show .modal-360-card {
+    transform: scale(1) translateY(0);
+}
+
+/* Custom Sleek Scrollbar for Modal Card */
+.modal-360-card::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.modal-360-card::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.modal-360-card::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.modal-360-card::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Fullscreen Mode */
+.modal-360-card.is-fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+/* ==========================================================================
+   2. MODAL HEADER & MODEL SWITCHER
+   ========================================================================== */
+
+.modal-360-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.95rem 1.6rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
+    gap: 1rem;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.modal-360-info {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.modal-360-badge {
+    display: inline-block;
+    background: #e6f7ee;
+    color: #007331;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.modal-360-header h3 {
+    font-size: 1.22rem;
+    color: #005a26;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+/* Model Switcher Tabs */
+.modal-model-tabs {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 50px;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.modal-tab-pill {
+    background: transparent;
+    border: none;
+    outline: none !important;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    padding: 5px 13px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-tab-pill:hover {
+    color: #0f172a;
+}
+
+.modal-tab-pill.active {
+    background: #009640;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 150, 64, 0.3);
+}
+
+/* Header Window Actions (Fullscreen & Close) */
+.modal-window-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.modal-action-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none !important;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-action-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.modal-action-btn:hover {
+    background: #e2e8f0;
+    color: #005a26;
+    transform: scale(1.05);
+}
+
+.modal-action-btn.modal-close-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+.modal-action-btn.modal-close-btn:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+    transform: scale(1.08);
+}
+
+/* ==========================================================================
+   3. MODAL STAGE (IMAGE VIEWPORT & ROTATION ENGINE)
+   ========================================================================== */
+
+.modal-360-stage {
+    position: relative;
+    background: radial-gradient(circle, #ffffff 25%, #f1f6f3 100%);
+    flex: 1 1 auto;
+    min-height: 200px;
+    max-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.modal-360-stage:active {
+    cursor: grabbing;
+}
+
+.modal-img-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+}
+
+#modal360Img {
+    max-height: 100%;
+    max-width: 86%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease-out;
+    pointer-events: none;
+}
+
+.modal-360-card.is-fullscreen .modal-360-stage {
+    max-height: 65vh !important;
+}
+
+.modal-360-card.is-fullscreen #modal360Img {
+    max-height: 60vh !important;
+    max-width: 90% !important;
+}
+
+/* Dismissible Rotation Hint Banner */
+.stage-rotation-hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.76rem;
+    font-weight: 500;
+    padding: 5px 12px 5px 10px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: opacity 0.35s ease, transform 0.2s ease;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.stage-rotation-hint:hover {
+    background: rgba(15, 23, 42, 0.96);
+    transform: translateX(-50%) translateY(-1px);
+}
+
+.hint-icon-glow svg {
+    width: 14px;
+    height: 14px;
+    color: #4ade80;
+    display: block;
+}
+
+.hint-close-x {
+    font-size: 1.1rem;
+    line-height: 0.8;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 3px;
+    padding-left: 5px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Floating Zoom Controls */
+.modal-zoom-controls {
+    position: absolute;
+    bottom: 14px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    gap: 3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    z-index: 15;
+}
+
+.zoom-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    outline: none !important;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.zoom-btn:hover {
+    background: #e6f7ee;
+    color: #009640;
+}
+
+.zoom-btn.reset-btn {
+    font-size: 0.7rem;
+    width: auto;
+    padding: 0 8px;
+    border-radius: 12px;
+}
+
+/* ==========================================================================
+   4. ROTATION CHEVRONS - ZERO BLUE RINGS / BORDERS
+   ========================================================================== */
+
+.stage-rot-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+    color: #005a26 !important;
+    font-size: 1.45rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 15;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.stage-rot-arrow:focus,
+.stage-rot-arrow:active,
+.stage-rot-arrow:focus-visible {
+    outline: none !important;
+    border-color: #009640 !important;
+    box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.25) !important;
+}
+
+.stage-rot-arrow:focus:not(:focus-visible) {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+}
+
+.stage-rot-arrow:hover {
+    background: #009640 !important;
+    color: #ffffff !important;
+    border-color: #009640 !important;
+    transform: translateY(-50%) scale(1.06);
+}
+
+.stage-rot-arrow.prev { left: 14px; }
+.stage-rot-arrow.next { right: 14px; }
+
+/* ==========================================================================
+   5. MODAL BOTTOM CONTROLS, THUMBNAILS & ACTIONS
+   ========================================================================== */
+
+.modal-360-controls {
+    padding: 0.95rem 1.6rem;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.controls-angle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.active-angle-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #005a26;
+}
+
+.active-angle-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Angle Thumbnails Row */
+.modal-angle-thumbnails {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 3px 2px;
+}
+
+.modal-angle-thumbnails::-webkit-scrollbar {
+    height: 4px;
+}
+.modal-angle-thumbnails::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.modal-angle-thumbnails::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.modal-thumb-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 4px;
+    cursor: pointer;
+    min-width: 62px;
+    outline: none !important;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-thumb-btn img {
+    width: 52px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 4px;
+    background: #f8fafc;
+}
+
+.modal-thumb-btn span {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #64748b;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.modal-thumb-btn:hover {
+    border-color: #009640;
+    transform: translateY(-1px);
+}
+
+.modal-thumb-btn.active {
+    border-color: #009640;
+    box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.22);
+}
+
+.modal-thumb-btn.active span {
+    color: #009640;
+}
+
+/* Modal Footer Actions */
+.modal-footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    padding-top: 0.6rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.modal-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none !important;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-cancel-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
+}
+
+.modal-footer-primary-group {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+/* ==========================================================================
+   6. SHORT VIEWPORT / LAPTOP OPTIMIZATION (CRITICAL FOR 700px-800px HEIGHTS)
+   ========================================================================== */
+
+@media (max-height: 760px) {
+    .modal-backdrop-360 {
+        padding: 0.6rem 0.5rem;
+    }
+
+    .modal-360-card {
+        max-height: 96vh;
+        overflow-y: auto;
+    }
+
+    .modal-360-header {
+        padding: 0.65rem 1.2rem;
+    }
+
+    .modal-360-header h3 {
+        font-size: 1.08rem;
+    }
+
+    .modal-tab-pill {
+        padding: 4px 10px;
+        font-size: 0.74rem;
+    }
+
+    .modal-action-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .modal-360-stage {
+        min-height: 160px;
+        max-height: 30vh;
+    }
+
+    .modal-img-wrapper {
+        padding: 0.6rem 1rem;
+    }
+
+    .stage-rot-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+
+    .stage-rotation-hint {
+        top: 8px;
+        padding: 3px 10px;
+        font-size: 0.7rem;
+    }
+
+    .modal-360-controls {
+        padding: 0.65rem 1.2rem;
+        gap: 0.45rem;
+    }
+
+    .active-angle-name {
+        font-size: 0.86rem;
+    }
+
+    .active-angle-desc {
+        font-size: 0.75rem;
+    }
+
+    .modal-thumb-btn {
+        min-width: 54px;
+        padding: 3px;
+    }
+
+    .modal-thumb-btn img {
+        width: 44px;
+        height: 30px;
+    }
+
+    .modal-thumb-btn span {
+        font-size: 0.6rem;
+    }
+
+    .modal-footer-actions {
+        padding-top: 0.45rem;
+    }
+}
+
+/* ==========================================================================
+   7. TABLET SCREENS (769px - 1024px)
+   ========================================================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .modal-360-card {
+        max-width: 92%;
+        max-height: 92vh;
+    }
+
+    .modal-360-stage {
+        max-height: 36vh;
+    }
+
+    .modal-360-header h3 {
+        font-size: 1.15rem;
+    }
+}
+
+/* ==========================================================================
+   8. MOBILE SCREENS (< 768px) - 100% TOUCH FRIENDLY & ADAPTIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .modal-backdrop-360 {
+        padding: 0.5rem;
+        align-items: center;
+    }
+
+    .modal-360-card {
+        width: 100%;
+        max-height: 94vh;
+        border-radius: 16px;
+        overflow-y: auto;
+    }
+
+    /* 2-Tier Header on Mobile */
+    .modal-360-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        padding: 0.75rem 0.95rem;
+        gap: 0.6rem 0.5rem;
+    }
+
+    .modal-360-info {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        min-width: 0;
+    }
+
+    .modal-360-header h3 {
+        font-size: 1.02rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .modal-window-actions {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-self: end;
+    }
+
+    .modal-action-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    /* Model Tabs Row on Mobile */
+    .modal-model-tabs {
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 3px;
+        background: #f1f5f9;
+        box-sizing: border-box;
+    }
+
+    .modal-tab-pill {
+        padding: 5px 6px;
+        font-size: 0.74rem;
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* Mobile Stage */
+    .modal-360-stage {
+        min-height: 180px;
+        max-height: 28vh;
+    }
+
+    .modal-img-wrapper {
+        padding: 1.8rem 0.75rem 0.75rem 0.75rem;
+    }
+
+    #modal360Img {
+        max-height: 100%;
+        max-width: 90%;
+    }
+
+    .stage-rot-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+
+    .stage-rot-arrow.prev { left: 8px; }
+    .stage-rot-arrow.next { right: 8px; }
+
+    .stage-rotation-hint {
+        top: 8px;
+        padding: 4px 10px;
+        font-size: 0.68rem;
+        gap: 5px;
+        max-width: 90%;
+    }
+
+    .modal-zoom-controls {
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .zoom-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+    }
+
+    /* Mobile Controls & Thumbnails */
+    .modal-360-controls {
+        padding: 0.8rem 0.95rem;
+        gap: 0.55rem;
+    }
+
+    .active-angle-name {
+        font-size: 0.88rem;
+    }
+
+    .active-angle-desc {
+        font-size: 0.76rem;
+    }
+
+    .modal-thumb-btn {
+        min-width: 54px;
+        padding: 3px;
+    }
+
+    .modal-thumb-btn img {
+        width: 44px;
+        height: 30px;
+    }
+
+    .modal-thumb-btn span {
+        font-size: 0.62rem;
+    }
+
+    /* Mobile Action Buttons: Ergonomic Touch Hierarchy */
+    .modal-footer-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding-top: 0.5rem;
+    }
+
+    .modal-footer-primary-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .modal-footer-primary-group .btn,
+    .modal-cancel-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        min-height: 42px;
+        box-sizing: border-box;
+    }
+}
+
+/* ==========================================================================
+   9. ULTRA-COMPACT MOBILE (< 380px)
+   ========================================================================== */
+
+@media (max-width: 380px) {
+    .modal-360-header h3 {
+        font-size: 0.95rem;
+    }
+
+    .modal-tab-pill {
+        font-size: 0.68rem;
+        padding: 4px 4px;
+    }
+
+    .modal-360-stage {
+        min-height: 160px;
+        max-height: 25vh;
+    }
+
+    .modal-thumb-btn {
+        min-width: 48px;
+    }
+
+    .modal-thumb-btn img {
+        width: 40px;
+        height: 26px;
+    }
+}
+
+/* ==========================================================================
+   10. SITE-WIDE RESPONSIVE ENHANCEMENTS (FORMS, GRIDS & TABLES)
+   ========================================================================== */
+
+/* Prevent Mobile Input Auto-Zoom on iOS */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    /* Security alert toast position on mobile */
+    .yug-security-toast {
+        bottom: 16px !important;
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        max-width: 90% !important;
+        text-align: center;
+        font-size: 0.8rem !important;
+    }
+}

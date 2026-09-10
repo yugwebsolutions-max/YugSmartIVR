@@ -16,9 +16,11 @@
 
     const LEAD_CONFIG = {
         recipientEmail: 'yugwebsolutions@gmail.com',
+        formSubmitToken: 'f40be870712b3641a8926657ccfe7d90',
         companyName: 'Yug Web Solutions',
         productName: 'Yug Smart IVR',
-        formSubmitEndpoint: 'https://formsubmit.co/ajax/yugwebsolutions@gmail.com',
+        formSubmitEndpoint: 'https://formsubmit.co/ajax/f40be870712b3641a8926657ccfe7d90',
+        directFormSubmitUrl: 'https://formsubmit.co/f40be870712b3641a8926657ccfe7d90',
         localNodeEndpoint: 'http://localhost:3000/api/leads',
         storageKey: 'yug_leads_tracker'
     };
@@ -149,7 +151,7 @@
         formData.append('Source', leadData.source || window.location.href);
 
         // 3. Fast Dispatch to FormSubmit with safety timeout
-        const dispatchPromise = fetch('https://formsubmit.co/yugwebsolutions@gmail.com', {
+        const dispatchPromise = fetch(LEAD_CONFIG.directFormSubmitUrl, {
             method: 'POST',
             body: formData,
             mode: 'no-cors' // Ensures browser sends without CORS delays or blocking
@@ -159,7 +161,7 @@
 
         // 4. Also attempt JSON dispatch in parallel as backup
         try {
-            fetch('https://formsubmit.co/ajax/yugwebsolutions@gmail.com', {
+            fetch(LEAD_CONFIG.formSubmitEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({

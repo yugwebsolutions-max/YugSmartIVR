@@ -42,6 +42,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="chatbot/bot.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <script src="js/security.js" defer></script>
     <script src="js/lead-service.js" defer></script>
     <script src="chatbot/bot-knowledge.js" defer></script>
@@ -1665,7 +1666,7 @@
             // Use Pure JavaScript LeadService (Dispatches email to yugwebsolutions@gmail.com & tracks in .json)
             const sendPromise = (window.LeadService && typeof window.LeadService.submitLead === 'function')
                 ? window.LeadService.submitLead(leadData)
-                : fetch('https://formsubmit.co/ajax/yugwebsolutions@gmail.com', {
+                : fetch('https://formsubmit.co/ajax/f40be870712b3641a8926657ccfe7d90', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({

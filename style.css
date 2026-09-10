@@ -2594,13 +2594,14 @@ footer, .site-footer {
     background: #ffffff;
     border-radius: 18px;
     width: 95%;
-    max-width: 980px;
-    max-height: 94vh;
+    max-width: 960px;
+    max-height: min(92vh, 740px);
     display: flex;
     flex-direction: column;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     transform: scale(0.95);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -2736,8 +2737,9 @@ footer, .site-footer {
 .modal-360-stage {
     position: relative;
     background: radial-gradient(circle, #ffffff 20%, #f1f6f3 100%);
-    flex: 1;
-    min-height: 400px;
+    flex: 1 1 auto;
+    min-height: 180px;
+    max-height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2820,13 +2822,13 @@ footer, .site-footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
 }
 
 #modal360Img {
-    max-height: 360px;
+    max-height: 100%;
     width: auto;
-    max-width: 88%;
+    max-width: 86%;
     object-fit: contain;
     transition: transform 0.2s ease-out;
     pointer-events: none;
@@ -2892,23 +2894,37 @@ footer, .site-footer {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    color: var(--yug-emerald-dark);
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+    color: var(--yug-emerald-dark, #005a26) !important;
     font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 15;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
     transition: all 0.25s ease;
+}
+
+.stage-rot-arrow:focus,
+.stage-rot-arrow:active,
+.stage-rot-arrow:focus-visible {
+    outline: none !important;
+    border-color: var(--yug-emerald, #009640) !important;
+    box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.25) !important;
+}
+
+.stage-rot-arrow:focus:not(:focus-visible) {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
 }
 
 .stage-rot-arrow:hover {
     background: var(--yug-emerald);
-    color: #ffffff;
-    border-color: var(--yug-emerald);
+    color: #ffffff !important;
+    border-color: var(--yug-emerald) !important;
 }
 
 .stage-rot-arrow.prev { left: 16px; }
