@@ -1,0 +1,9 @@
+{
+  "name": "yug-smart-ivr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Yug Smart IVR - Enterprise Multi-SIM Telephony Solutions",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

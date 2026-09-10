@@ -14,7 +14,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 const LEADS_FILE = path.join(__dirname, 'leads.json');
-const ROOT_DIR = path.join(__dirname, '..');
+const ROOT_DIR = __dirname;
 
 // Ensure leads.json exists
 if (!fs.existsSync(LEADS_FILE)) {
