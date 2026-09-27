@@ -279,8 +279,9 @@ module.exports = async function handler(req, res) {
         const emailSubject = `🔔 New IVR Lead: ${cleanName} - ${cleanReq} (+91 ${cleanMobile})`;
 
         // Dispatch Option 1: Gmail SMTP via Nodemailer
-        const gmailPassword = process.env.GMAIL_APP_PASSWORD;
-        const gmailUser = process.env.GMAIL_USER || CONFIG.senderEmail;
+        const rawPassword = process.env.GMAIL_APP_PASSWORD;
+        const gmailPassword = rawPassword ? String(rawPassword).replace(/\s+/g, '') : null;
+        const gmailUser = (process.env.GMAIL_USER ? String(process.env.GMAIL_USER).trim() : null) || CONFIG.senderEmail;
 
         if (gmailPassword && nodemailer) {
             const transporter = nodemailer.createTransport({
