@@ -19,6 +19,7 @@
         formSubmitToken: 'f40be870712b3641a8926657ccfe7d90',
         companyName: 'Yug Web Solutions',
         productName: 'Yug Smart IVR',
+        vercelEndpoint: '/api/send-lead',
         formSubmitEndpoint: 'https://formsubmit.co/ajax/f40be870712b3641a8926657ccfe7d90',
         directFormSubmitUrl: 'https://formsubmit.co/f40be870712b3641a8926657ccfe7d90',
         localNodeEndpoint: 'http://localhost:3000/api/leads',
@@ -136,58 +137,72 @@
             timestamp: timestamp
         });
 
-        // 3. Build FormData payload for ultra-fast direct delivery (1-2s response)
-        const formData = new FormData();
-        formData.append('_subject', `🔔 New IVR Lead: ${cleanName} - ${cleanReq} (+91 ${cleanMobile})`);
-        formData.append('_template', 'table');
-        formData.append('_captcha', 'false');
-        formData.append('Customer Name', cleanName);
-        formData.append('Customer Mobile Number', '+91 ' + cleanMobile);
-        formData.append('Requirement', leadData.requirement);
-        formData.append('Customer Email', (leadData.email && leadData.email.trim()) ? leadData.email.trim() : 'Not Provided');
-        formData.append('Direct Call', '+91 7387829461');
-        formData.append('Submission Time', timestamp);
-        formData.append('Brand & Product', `${LEAD_CONFIG.productName} by ${LEAD_CONFIG.companyName}`);
-        formData.append('Source', leadData.source || window.location.href);
+        // 3. Dispatch to Clean Vercel Serverless Function (/api/send-lead) - Zero Ads
+        const vercelPayload = {
+            name: cleanName,
+            mobile: cleanMobile,
+            email: cleanEmail,
+            requirement: cleanReq,
+            source: cleanSource,
+            timestamp: timestamp
+        };
 
-        // 3. Fast Dispatch to FormSubmit with safety timeout
-        const dispatchPromise = fetch(LEAD_CONFIG.directFormSubmitUrl, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors' // Ensures browser sends without CORS delays or blocking
-        }).catch(err => {
-            console.warn('Primary dispatch notice:', err);
-        });
+        const dispatchPromise = (async () => {
+            let vercelSuccess = false;
+            try {
+                const response = await fetch(LEAD_CONFIG.vercelEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(vercelPayload)
+                });
 
-        // 4. Also attempt JSON dispatch in parallel as backup
-        try {
-            fetch(LEAD_CONFIG.formSubmitEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    _subject: `🔔 New IVR Lead: ${leadData.name} - ${leadData.requirement} (+91 ${cleanMobile})`,
-                    _template: 'table',
-                    _captcha: 'false',
-                    'Customer Name': leadData.name,
-                    'Customer Mobile Number': '+91 ' + cleanMobile,
-                    'Requirement': leadData.requirement,
-                    'Customer Email': (leadData.email && leadData.email.trim()) ? leadData.email.trim() : 'Not Provided',
-                    'Direct Call': '+91 7387829461',
-                    'Submission Time': timestamp,
-                    'Brand & Product': `${LEAD_CONFIG.productName} by ${LEAD_CONFIG.companyName}`,
-                    'Source': leadData.source || window.location.href
-                })
-            }).catch(() => {});
-        } catch (e) {}
+                if (response.ok) {
+                    const resData = await response.json().catch(() => ({}));
+                    // If serverless sent directly via Gmail/Resend (no fallback needed), we're done!
+                    if (resData.success && !resData.fallback_needed) {
+                        vercelSuccess = true;
+                        console.log('[LeadService] Dispatched via clean Vercel email (Zero Ads).');
+                    }
+                }
+            } catch (err) {
+                console.warn('[LeadService] Vercel endpoint notice (using backup if needed):', err);
+            }
 
-        // 5. Optional: Sync to local Node.js server (api/server.js) if running locally
-        try {
-            fetch(LEAD_CONFIG.localNodeEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(savedRecord)
-            }).catch(() => {});
-        } catch (e) {}
+            // 4. Fail-safe Backup: If Vercel credentials are pending or offline, use FormSubmit
+            if (!vercelSuccess) {
+                try {
+                    const formData = new FormData();
+                    formData.append('_subject', `🔔 New IVR Lead: ${cleanName} - ${cleanReq} (+91 ${cleanMobile})`);
+                    formData.append('_template', 'table');
+                    formData.append('_captcha', 'false');
+                    formData.append('Customer Name', cleanName);
+                    formData.append('Customer Mobile Number', '+91 ' + cleanMobile);
+                    formData.append('Requirement', cleanReq);
+                    formData.append('Customer Email', (cleanEmail && cleanEmail !== 'Not Provided') ? cleanEmail : 'Not Provided');
+                    formData.append('Direct Call', '+91 7387829461');
+                    formData.append('Submission Time', timestamp);
+                    formData.append('Brand & Product', `${LEAD_CONFIG.productName} by ${LEAD_CONFIG.companyName}`);
+                    formData.append('Source', cleanSource);
+
+                    fetch(LEAD_CONFIG.directFormSubmitUrl, {
+                        method: 'POST',
+                        body: formData,
+                        mode: 'no-cors'
+                    }).catch(() => {});
+                } catch (e) {}
+            }
+
+            // 5. Optional: Sync to local Node.js server (server.js) if running locally
+            try {
+                fetch(LEAD_CONFIG.localNodeEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(savedRecord)
+                }).catch(() => {});
+            } catch (e) {}
+
+            return { success: true, cleanVercel: vercelSuccess };
+        })();
 
         // 6. Max 2.5s wait promise so caller UI is never frozen
         const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
