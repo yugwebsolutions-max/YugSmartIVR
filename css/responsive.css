@@ -231,8 +231,9 @@
     position: relative;
     background: radial-gradient(circle, #ffffff 25%, #f1f6f3 100%);
     flex: 1 1 auto;
-    min-height: 200px;
-    max-height: 40vh;
+    height: clamp(240px, 42vh, 400px);
+    min-height: 220px;
+    max-height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -247,18 +248,20 @@
 }
 
 .modal-img-wrapper {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 1.5rem;
+    padding: 12px 20px;
     box-sizing: border-box;
 }
 
 #modal360Img {
     max-height: 100%;
-    max-width: 86%;
+    max-width: 100%;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -267,12 +270,13 @@
 }
 
 .modal-360-card.is-fullscreen .modal-360-stage {
-    max-height: 65vh !important;
+    height: clamp(380px, 66vh, 760px) !important;
+    max-height: 70vh !important;
 }
 
 .modal-360-card.is-fullscreen #modal360Img {
-    max-height: 60vh !important;
-    max-width: 90% !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
 }
 
 /* Dismissible Rotation Hint Banner */
@@ -598,12 +602,14 @@
     }
 
     .modal-360-stage {
-        min-height: 160px;
-        max-height: 30vh;
+        height: clamp(220px, 36vh, 340px);
+        min-height: 200px;
     }
 
     .modal-img-wrapper {
-        padding: 0.6rem 1rem;
+        position: absolute;
+        inset: 0;
+        padding: 8px 16px;
     }
 
     .stage-rot-arrow {
@@ -744,17 +750,25 @@
 
     /* Mobile Stage */
     .modal-360-stage {
-        min-height: 180px;
-        max-height: 28vh;
+        height: clamp(200px, 34vh, 280px);
+        min-height: 190px;
     }
 
     .modal-img-wrapper {
-        padding: 1.8rem 0.75rem 0.75rem 0.75rem;
+        position: absolute;
+        inset: 0;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     #modal360Img {
         max-height: 100%;
-        max-width: 90%;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .stage-rot-arrow {
@@ -854,8 +868,8 @@
     }
 
     .modal-360-stage {
-        min-height: 160px;
-        max-height: 25vh;
+        height: clamp(180px, 30vh, 240px);
+        min-height: 170px;
     }
 
     .modal-thumb-btn {

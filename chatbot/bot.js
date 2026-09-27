@@ -188,9 +188,10 @@
                             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                         </svg>
                     </button>
-                    <button class="yug-bot-header-btn" id="yugBotMinimize" title="Minimize Chat">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <button class="yug-bot-header-btn" id="yugBotMinimize" title="Close / Minimize Chat" aria-label="Close Chat">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
                     </button>
                 </div>
@@ -239,12 +240,25 @@
             soundBtn.title = soundEnabled ? 'Sound On' : 'Sound Off';
         });
 
-        // Auto display teaser after 3.5s
-        setTimeout(() => {
-            if (!hasInteracted && !teaserDismissed) {
-                teaserBubble.style.display = 'flex';
+        // Quick Auto-Open: Automatically opens the full chatbot window quickly on page load
+        let autoOpenFired = false;
+        const triggerAutoOpen = () => {
+            if (!autoOpenFired && !isOpen) {
+                autoOpenFired = true;
+                toggleChat(true);
             }
-        }, 3500);
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(triggerAutoOpen, 800);
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(triggerAutoOpen, 800);
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(triggerAutoOpen, 1000);
+            });
+        }
 
         // Render Initial Welcome Message
         renderWelcomeMessage();
@@ -271,7 +285,9 @@
         if (isOpen) {
             chatWindow.classList.add('is-open');
             launcherBtn.classList.add('is-active');
-            inputField.focus();
+            if (window.innerWidth > 768 && inputField) {
+                inputField.focus({ preventScroll: true });
+            }
             scrollToBottom();
         } else {
             chatWindow.classList.remove('is-open');
@@ -411,7 +427,6 @@
                         <option value="8 SIM IVR">8 SIM IVR + WiFi</option>
                         <option value="IVR Solution">General IVR Solution</option>
                         <option value="Distributor Enquiry">Distributor / Reseller Enquiry</option>
-                        <option value="Other">Other Requirement</option>
                     </select>
                 </div>
 
