@@ -64,6 +64,22 @@
             };
             list.unshift(leadRecord);
             localStorage.setItem(LEAD_CONFIG.storageKey, JSON.stringify(list, null, 2));
+
+            // Also synchronize with CRM Dashboard store
+            try {
+                const crmRaw = localStorage.getItem('yug_crm_leads');
+                const crmList = crmRaw ? JSON.parse(crmRaw) : [];
+                const crmEntry = {
+                    ...leadRecord,
+                    status: 'New Lead',
+                    notes: ''
+                };
+                crmList.unshift(crmEntry);
+                localStorage.setItem('yug_crm_leads', JSON.stringify(crmList, null, 2));
+                // Fire custom event for instant CRM dashboard reflection
+                window.dispatchEvent(new CustomEvent('yug_lead_captured', { detail: crmEntry }));
+            } catch (ce) {}
+
             return leadRecord;
         } catch (e) {
             console.warn('Local JSON track note:', e);
@@ -167,6 +183,15 @@
             } catch (err) {
                 console.warn('[LeadService] Vercel endpoint notice (using backup if needed):', err);
             }
+
+            // 3b. Simultaneously ingest lead into backend CRM store
+            try {
+                fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'capture', lead: vercelPayload })
+                }).catch(() => {});
+            } catch (e) {}
 
             // 4. Fail-safe Backup: If Vercel credentials are pending or offline, use FormSubmit
             if (!vercelSuccess) {

@@ -209,92 +209,16 @@ const server = http.createServer((req, res) => {
         return str.replace(/<[^>]+>/g, '').replace(/javascript:/gi, '').trim();
     }
 
-    // API: POST /api/leads or /api/send-lead -> save to leads.json
-    if ((url.pathname === '/api/leads' || url.pathname === '/api/send-lead') && req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => { body += chunk; });
-        req.on('end', () => {
-            try {
-                const data = JSON.parse(body || '{}');
-
-                // Security: Anti-Bot Honeypot Trap Check
-                if (data._yug_hp_trap && String(data._yug_hp_trap).trim().length > 0) {
-                    console.warn(`[${new Date().toLocaleTimeString()}] 🤖 Bot submission trapped and discarded.`);
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: true, message: 'Processed successfully' }));
-                    return;
-                }
-
-                const cleanMobile = String(data.mobile || data.customerMobileNumber || '').replace(/\D/g, '');
-                const cleanName = cleanInput(data.name || data.customerName || 'Anonymous');
-                const cleanReq = cleanInput(data.requirement || 'IVR Solution');
-                const cleanEmail = cleanInput(data.email || 'Not Provided');
-
-                const newLead = {
-                    id: 'LEAD_' + Date.now(),
-                    timestamp: data.timestamp || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST',
-                    customerName: cleanName,
-                    customerMobileNumber: '+91 ' + cleanMobile,
-                    name: cleanName,
-                    mobile: cleanMobile,
-                    requirement: cleanReq,
-                    email: cleanEmail,
-                    directCall: '+91 7387829461',
-                    source: cleanInput(data.source || req.headers.referer || 'http://localhost:3000'),
-                    ip: req.socket.remoteAddress || 'Unknown'
-                };
-
-                let existing = [];
-                try {
-                    const fileContent = fs.readFileSync(LEADS_FILE, 'utf8');
-                    existing = JSON.parse(fileContent || '[]');
-                    if (!Array.isArray(existing)) existing = [];
-                } catch (e) {
-                    existing = [];
-                }
-
-                existing.unshift(newLead);
-                fs.writeFileSync(LEADS_FILE, JSON.stringify(existing, null, 2), 'utf8');
-
-                console.log(`[${new Date().toLocaleTimeString()}] 🔔 New lead tracked in api/leads.json: ${newLead.customerName} (${newLead.requirement}) - ${newLead.customerMobileNumber}`);
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({
-                    success: true,
-                    message: 'Lead recorded to api/leads.json successfully.',
-                    total_leads: existing.length,
-                    lead: newLead
-                }));
-            } catch (err) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, error: 'Invalid JSON payload' }));
-            }
-        });
+    // API: Modular endpoints
+    if (url.pathname === '/api/leads') {
+        const leadsHandler = require('./api/leads.js');
+        leadsHandler(req, res);
         return;
     }
 
-    // API: GET /api/leads -> Protected by Authorization Passcode
-    if (url.pathname === '/api/leads' && req.method === 'GET') {
-        const authHeader = req.headers['authorization'] || '';
-        const authKey = url.searchParams.get('key') || authHeader.replace(/^Bearer\s+/i, '');
-
-        if (authKey !== 'yug@2026' && authKey !== 'admin7387') {
-            res.writeHead(401, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-                success: false,
-                error: 'Unauthorized: Valid administrative key required to access customer leads.'
-            }));
-            return;
-        }
-
-        try {
-            const data = fs.readFileSync(LEADS_FILE, 'utf8');
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(data);
-        } catch (e) {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end('[]');
-        }
+    if (url.pathname === '/api/send-lead') {
+        const sendLeadHandler = require('./api/send-lead.js');
+        sendLeadHandler(req, res);
         return;
     }
 

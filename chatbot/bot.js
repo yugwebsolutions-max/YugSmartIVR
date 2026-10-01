@@ -285,13 +285,16 @@
         if (isOpen) {
             chatWindow.classList.add('is-open');
             launcherBtn.classList.add('is-active');
-            if (window.innerWidth > 768 && inputField) {
+            if (window.innerWidth <= 768) {
+                document.body.classList.add('yug-bot-mobile-open');
+            } else if (inputField) {
                 inputField.focus({ preventScroll: true });
             }
             scrollToBottom();
         } else {
             chatWindow.classList.remove('is-open');
             launcherBtn.classList.remove('is-active');
+            document.body.classList.remove('yug-bot-mobile-open');
         }
     }
 

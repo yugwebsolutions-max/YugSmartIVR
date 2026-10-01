@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Yug Smart IVR — CRM Sales & Lead Management</title>
+    <link rel="icon" type="image/webp" href="../assets/yug-logo.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0b0f14;
+            --bg-card: #151b22;
+            --bg-card-hover: #1c242e;
+            --border-subtle: #232d38;
+            --border-highlight: rgba(0, 150, 64, 0.4);
+            --yug-emerald: #009640;
+            --yug-emerald-light: #10b981;
+            --yug-emerald-tint: rgba(0, 150, 64, 0.12);
+            --yug-gold: #f59e0b;
+            --yug-blue: #0284c7;
+            --yug-purple: #8b5cf6;
+            --yug-red: #ef4444;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----------------------------------------------------
+           1. AUTHENTICATION VIEW (LOGIN)
+           ---------------------------------------------------- */
+        .auth-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+            background: radial-gradient(circle at 50% 20%, rgba(0, 150, 64, 0.15) 0%, rgba(11, 15, 20, 1) 70%);
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            animation: authFadeIn 0.4s ease;
+        }
+
+        @keyframes authFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-logo-wrap {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-logo-img {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            padding: 6px;
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            object-fit: contain;
+        }
+
+        .auth-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-title span {
+            color: var(--yug-emerald-light);
+        }
+
+        .auth-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 4px;
+            margin-bottom: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #ffffff;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--yug-emerald);
+            box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.2);
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .toggle-pwd-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .toggle-pwd-btn:hover {
+            color: var(--text-main);
+        }
+
+        .auth-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+        }
+
+        .remember-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--yug-emerald) 0%, #0d833b 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(0, 150, 64, 0.35);
+            transition: transform 0.15s, box-shadow 0.2s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0, 150, 64, 0.5);
+        }
+
+        .auth-btn:active {
+            transform: translateY(1px);
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .auth-hint {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .auth-hint code {
+            color: var(--yug-emerald-light);
+            background: rgba(0, 150, 64, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+
+        /* ----------------------------------------------------
+           2. CRM DASHBOARD MAIN VIEW
+           ---------------------------------------------------- */
+        .crm-app {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .crm-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 4px;
+            object-fit: contain;
+        }
+
+        .header-titles h1 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-titles h1 span {
+            color: var(--yug-emerald-light);
+        }
+
+        .crm-badge {
+            background: var(--yug-emerald-tint);
+            border: 1px solid var(--border-highlight);
+            color: var(--yug-emerald-light);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .live-clock {
+            font-size: 12px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            background: #0d1217;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--yug-emerald-light);
+            box-shadow: 0 0 10px var(--yug-emerald-light);
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { opacity: 0.6; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            background: #1c242e;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: #25303d;
+            border-color: #3b4856;
+            color: #ffffff;
+        }
+
+        .btn-primary-action {
+            background: var(--yug-emerald);
+            border-color: var(--yug-emerald);
+            color: #ffffff;
+        }
+
+        .btn-primary-action:hover {
+            background: var(--yug-emerald-light);
+            border-color: var(--yug-emerald-light);
+        }
+
+        .btn-logout {
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+        }
+
+        /* ----------------------------------------------------
+           3. DASHBOARD BODY & STAT CARDS
+           ---------------------------------------------------- */
+        .crm-body {
+            flex: 1;
+            padding: 28px;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.card-green::before { background: var(--yug-emerald-light); }
+        .stat-card.card-blue::before { background: var(--yug-blue); }
+        .stat-card.card-gold::before { background: var(--yug-gold); }
+        .stat-card.card-purple::before { background: var(--yug-purple); }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: var(--font-mono);
+            line-height: 1;
+        }
+
+        .stat-subtext {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        /* ----------------------------------------------------
+           4. TABLE CONTROLS (SEARCH & FILTER)
+           ---------------------------------------------------- */
+        .table-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-toolbar {
+            padding: 18px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: #11161d;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+            max-width: 420px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px 14px 10px 38px;
+            font-size: 13px;
+            color: #ffffff;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--yug-emerald);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .select-filter {
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .select-filter:focus {
+            border-color: var(--yug-emerald);
+        }
+
+        /* ----------------------------------------------------
+           5. LEADS DATA TABLE
+           ---------------------------------------------------- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .leads-table th {
+            background: #11161d;
+            padding: 14px 18px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid var(--border-subtle);
+            white-space: nowrap;
+        }
+
+        .leads-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .leads-table tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        .lead-id-time {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .cust-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .cust-contact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .cust-mobile {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--yug-emerald-light);
+            text-decoration: none;
+        }
+
+        .action-icon-btn {
+            background: #1c242e;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .action-call-btn:hover {
+            background: var(--yug-emerald);
+            border-color: var(--yug-emerald);
+            color: #ffffff;
+        }
+
+        .action-wa-btn:hover {
+            background: #25D366;
+            border-color: #25D366;
+            color: #ffffff;
+        }
+
+        /* Requirement Badges */
+        .pill-req {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .pill-1sim { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .pill-2sim { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .pill-4sim { background: rgba(167, 139, 250, 0.15); color: #c084fc; border: 1px solid rgba(167, 139, 250, 0.3); }
+        .pill-8sim { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .pill-other { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+        /* Status Dropdown */
+        .status-select {
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .status-new { border-color: #38bdf8; color: #38bdf8; }
+        .status-contacted { border-color: #fbbf24; color: #fbbf24; }
+        .status-progress { border-color: #c084fc; color: #c084fc; }
+        .status-converted { border-color: #34d399; color: #34d399; }
+        .status-closed { border-color: #ef4444; color: #f87171; }
+
+        .notes-input {
+            width: 100%;
+            min-width: 160px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 12px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .notes-input:focus {
+            background: #0d1217;
+            border-color: var(--border-subtle);
+            color: #ffffff;
+        }
+
+        .btn-delete-row {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .btn-delete-row:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Empty State */
+        .table-empty {
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .table-empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        /* ----------------------------------------------------
+           6. MANUAL LEAD MODAL
+           ---------------------------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Toast Notifications */
+        .crm-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e2630;
+            border: 1px solid var(--yug-emerald);
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 10000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .crm-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .crm-header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .crm-body {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .table-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-wrap {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====================================================
+         1. AUTHENTICATION (LOGIN VIEW)
+         ==================================================== -->
+    <div class="auth-overlay" id="authView">
+        <div class="auth-card">
+            <div class="auth-logo-wrap">
+                <img src="../assets/yug-logo.webp" alt="Yug Smart IVR Logo" class="auth-logo-img">
+                <h2 class="auth-title">YUG <span>SMART IVR</span></h2>
+                <p class="auth-subtitle">Sales CRM Portal & Lead Management</p>
+            </div>
+
+            <div class="auth-error" id="authErrorMsg"></div>
+
+            <form id="loginForm" onsubmit="handleCrmLogin(event)">
+                <div class="form-group">
+                    <label for="usernameInput">Username or Email</label>
+                    <input type="text" id="usernameInput" class="form-input" placeholder="admin" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="passwordInput" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁</button>
+                    </div>
+                </div>
+
+                <div class="auth-options">
+                    <label class="remember-label">
+                        <input type="checkbox" id="rememberMeCheckbox" checked>
+                        <span>Keep me logged in</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-btn" id="loginSubmitBtn">
+                    <span>Sign In to CRM Portal →</span>
+                </button>
+            </form>
+
+            <div class="auth-hint">
+                Default Access: <code>admin</code> &bull; Passcode: <code>yug@2026</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================================
+         2. EXECUTIVE CRM DASHBOARD VIEW
+         ==================================================== -->
+    <div class="crm-app" id="crmAppView">
+        <!-- Top Navigation Bar -->
+        <header class="crm-header">
+            <div class="header-brand">
+                <img src="../assets/yug-logo.webp" alt="Yug Smart IVR" class="header-logo">
+                <div class="header-titles">
+                    <h1>YUG <span>SMART IVR</span> <span class="crm-badge">CRM Live</span></h1>
+                </div>
+            </div>
+
+            <div class="header-meta">
+                <div class="live-clock">
+                    <span class="live-dot"></span>
+                    <span id="liveClockDisplay">00:00:00 IST</span>
+                </div>
+
+                <div class="header-actions">
+                    <button type="button" class="btn-action" onclick="fetchLeadsFromBackend(true)" title="Force Refresh">
+                        <span id="refreshIcon">🔄</span> Refresh
+                    </button>
+                    <button type="button" class="btn-action btn-primary-action" onclick="openAddLeadModal()">
+                        + Add Lead
+                    </button>
+                    <button type="button" class="btn-action" onclick="exportLeadsCsv()" title="Download CSV for Excel">
+                        📥 Export CSV
+                    </button>
+                    <button type="button" class="btn-action btn-logout" onclick="handleCrmLogout()" title="Sign out">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Container -->
+        <main class="crm-body">
+            <!-- Stats Ribbon -->
+            <div class="stats-grid">
+                <div class="stat-card card-green">
+                    <div class="stat-header">
+                        <span class="stat-label">Total Leads</span>
+                        <span class="stat-icon">📈</span>
+                    </div>
+                    <div class="stat-value" id="statTotalLeads">0</div>
+                    <div class="stat-subtext">All time inquiries captured</div>
+                </div>
+
+                <div class="stat-card card-blue">
+                    <div class="stat-header">
+                        <span class="stat-label">Today's Leads</span>
+                        <span class="stat-icon">🟢</span>
+                    </div>
+                    <div class="stat-value" id="statTodayLeads">0</div>
+                    <div class="stat-subtext">Received today in IST</div>
+                </div>
+
+                <div class="stat-card card-purple">
+                    <div class="stat-header">
+                        <span class="stat-label">By SIM Model</span>
+                        <span class="stat-icon">📱</span>
+                    </div>
+                    <div class="stat-value" id="statModelBreakdown" style="font-size:16px; font-weight:600; line-height:1.5;">
+                        Loading...
+                    </div>
+                    <div class="stat-subtext">Model distribution</div>
+                </div>
+
+                <div class="stat-card card-gold">
+                    <div class="stat-header">
+                        <span class="stat-label">Conversion & Status</span>
+                        <span class="stat-icon">🎯</span>
+                    </div>
+                    <div class="stat-value" id="statConvertedLeads">0</div>
+                    <div class="stat-subtext" id="statContactedRate">0% contacted</div>
+                </div>
+            </div>
+
+            <!-- Leads Table & Filtering Section -->
+            <div class="table-section">
+                <div class="table-toolbar">
+                    <div class="search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="tableSearchInput" class="search-input" placeholder="Search by name, phone, email, notes..." oninput="handleSearchFilter()">
+                    </div>
+
+                    <div class="filter-group">
+                        <select id="modelFilterSelect" class="select-filter" onchange="handleSearchFilter()">
+                            <option value="ALL">All Models</option>
+                            <option value="Single SIM">Single SIM IVR</option>
+                            <option value="2 SIM">2 SIM IVR</option>
+                            <option value="4 SIM">4 SIM IVR</option>
+                            <option value="8 SIM">8 SIM IVR</option>
+                            <option value="Distributor">Distributor Enquiry</option>
+                        </select>
+
+                        <select id="statusFilterSelect" class="select-filter" onchange="handleSearchFilter()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="New Lead">🟢 New Lead</option>
+                            <option value="Contacted">🟡 Contacted</option>
+                            <option value="In Discussion">🟣 In Discussion</option>
+                            <option value="Converted">🏆 Converted</option>
+                            <option value="Closed / Lost">🔴 Closed / Lost</option>
+                        </select>
+
+                        <select id="sortFilterSelect" class="select-filter" onchange="handleSearchFilter()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="leads-table">
+                        <thead>
+                            <tr>
+                                <th># / Date (IST)</th>
+                                <th>Customer & Contact</th>
+                                <th>Requirement</th>
+                                <th>Email</th>
+                                <th>Source</th>
+                                <th>Lead Status</th>
+                                <th>Sales Notes</th>
+                                <th style="text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsTableBody">
+                            <!-- Injected dynamically via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-empty" id="tableEmptyState" style="display:none;">
+                    <div class="table-empty-icon">📭</div>
+                    <h3>No matching leads found</h3>
+                    <p>Try adjusting your search keywords or filter dropdowns.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ====================================================
+         3. MANUAL LEAD ENTRY MODAL
+         ==================================================== -->
+    <div class="modal-overlay" id="addLeadModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>+ Add Manual Lead</h3>
+                <button type="button" class="modal-close-btn" onclick="closeAddLeadModal()">&times;</button>
+            </div>
+
+            <form onsubmit="handleSaveManualLead(event)">
+                <div class="form-group">
+                    <label for="manualName">Customer Name *</label>
+                    <input type="text" id="manualName" class="form-input" required placeholder="e.g. Ramesh Patil">
+                </div>
+
+                <div class="form-group">
+                    <label for="manualMobile">Mobile Number (10 digits) *</label>
+                    <input type="tel" id="manualMobile" class="form-input" required placeholder="98XXXXXXXX" pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group">
+                    <label for="manualRequirement">Selected Requirement *</label>
+                    <select id="manualRequirement" class="form-input" required>
+                        <option value="4 SIM IVR">4 SIM IVR (Popular)</option>
+                        <option value="Single SIM IVR">Single SIM IVR</option>
+                        <option value="2 SIM IVR">2 SIM IVR</option>
+                        <option value="8 SIM IVR">8 SIM IVR Enterprise</option>
+                        <option value="Distributor Enquiry">Distributor Enquiry</option>
+                        <option value="Custom IVR Solution">Custom IVR Solution</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="manualEmail">Customer Email (Optional)</label>
+                    <input type="email" id="manualEmail" class="form-input" placeholder="customer@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="manualSource">Lead Source</label>
+                    <input type="text" id="manualSource" class="form-input" value="Direct Phone Call">
+                </div>
+
+                <div class="form-group">
+                    <label for="manualNotes">Initial Notes</label>
+                    <input type="text" id="manualNotes" class="form-input" placeholder="e.g. Interested in call recording and SMS">
+                </div>
+
+                <button type="submit" class="auth-btn">
+                    <span>Save Lead to CRM</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="crm-toast" id="crmToast">
+        <span id="toastIcon">🔔</span>
+        <span id="toastMessage">Lead updated</span>
+    </div>
+
+    <!-- ====================================================
+         4. CORE JAVASCRIPT LOGIC
+         ==================================================== -->
+    <script>
+        'use strict';
+
+        let crmLeads = [];
+        let activeAdminToken = null;
+
+        // ----------------------------------------------------
+        // Authentication & Session
+        // ----------------------------------------------------
+        function checkExistingSession() {
+            const savedToken = sessionStorage.getItem('yug_crm_token') || localStorage.getItem('yug_crm_token');
+            if (savedToken) {
+                activeAdminToken = savedToken;
+                showCrmApp();
+                fetchLeadsFromBackend();
+            } else {
+                showAuthView();
+            }
+        }
+
+        function showAuthView() {
+            document.getElementById('authView').style.display = 'flex';
+            document.getElementById('crmAppView').style.display = 'none';
+        }
+
+        function showCrmApp() {
+            document.getElementById('authView').style.display = 'none';
+            document.getElementById('crmAppView').style.display = 'flex';
+        }
+
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('passwordInput');
+            pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        }
+
+        async function handleCrmLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+            const errorBox = document.getElementById('authErrorMsg');
+            const submitBtn = document.getElementById('loginSubmitBtn');
+
+            errorBox.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Verifying...</span>';
+
+            try {
+                // Check with backend API
+                const res = await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'login', username, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    activeAdminToken = data.token;
+                    sessionStorage.setItem('yug_crm_token', data.token);
+                    if (rememberMe) {
+                        localStorage.setItem('yug_crm_token', data.token);
+                    }
+                    showCrmApp();
+                    fetchLeadsFromBackend();
+                    showToast('🎉 Welcome to Yug Smart IVR CRM!', '✅');
+                } else {
+                    // Fallback to local credential check if offline/static
+                    if ((username === 'admin' || username === 'yugwebsolutions@gmail.com') && password === 'yug@2026') {
+                        const localTok = 'yug_local_' + Date.now();
+                        activeAdminToken = localTok;
+                        sessionStorage.setItem('yug_crm_token', localTok);
+                        if (rememberMe) localStorage.setItem('yug_crm_token', localTok);
+                        showCrmApp();
+                        fetchLeadsFromBackend();
+                        showToast('🎉 Logged in successfully', '✅');
+                    } else {
+                        errorBox.textContent = data.error || 'Invalid username or password.';
+                        errorBox.style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                // Offline fallback check
+                if ((username === 'admin' || username === 'yugwebsolutions@gmail.com') && password === 'yug@2026') {
+                    const localTok = 'yug_local_' + Date.now();
+                    activeAdminToken = localTok;
+                    sessionStorage.setItem('yug_crm_token', localTok);
+                    showCrmApp();
+                    fetchLeadsFromBackend();
+                } else {
+                    errorBox.textContent = 'Connection error. Please try again.';
+                    errorBox.style.display = 'block';
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Sign In to CRM Portal →</span>';
+            }
+        }
+
+        function handleCrmLogout() {
+            sessionStorage.removeItem('yug_crm_token');
+            localStorage.removeItem('yug_crm_token');
+            activeAdminToken = null;
+            showAuthView();
+            showToast('Logged out of CRM', '👋');
+        }
+
+        // ----------------------------------------------------
+        // Real-Time Lead Fetching & Merging
+        // ----------------------------------------------------
+        async function fetchLeadsFromBackend(forceNotification = false) {
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon) refreshIcon.style.animation = 'spin 0.6s linear';
+
+            // 1. Load local cache
+            let localCache = [];
+            try {
+                const rawCrm = localStorage.getItem('yug_crm_leads');
+                const rawTracker = localStorage.getItem('yug_leads_tracker');
+                const crmList = rawCrm ? JSON.parse(rawCrm) : [];
+                const trackerList = rawTracker ? JSON.parse(rawTracker) : [];
+                localCache = [...crmList, ...trackerList];
+            } catch (e) {}
+
+            // 2. Fetch from backend API
+            try {
+                const res = await fetch('/api/leads', {
+                    headers: { 'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.leads)) {
+                        // Merge backend + localCache
+                        crmLeads = mergeLeads(data.leads, localCache);
+                        // Save merged to local cache
+                        localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+                    }
+                } else {
+                    crmLeads = deduplicateLeads(localCache);
+                }
+            } catch (err) {
+                console.warn('[CRM] Backend fetch note, using local cache:', err);
+                crmLeads = deduplicateLeads(localCache);
+            }
+
+            renderDashboard();
+            if (forceNotification) showToast('Leads refreshed successfully', '🔄');
+            if (refreshIcon) setTimeout(() => { refreshIcon.style.animation = ''; }, 600);
+        }
+
+        function deduplicateLeads(list) {
+            const map = new Map();
+            list.forEach(item => {
+                if (item && (item.id || item.mobile)) {
+                    const key = item.id || (item.mobile + '_' + item.timestamp);
+                    if (!map.has(key)) map.set(key, item);
+                }
+            });
+            return Array.from(map.values()).sort((a, b) => {
+                const idA = parseInt(String(a.id || '').replace(/\D/g, '')) || 0;
+                const idB = parseInt(String(b.id || '').replace(/\D/g, '')) || 0;
+                return idB - idA;
+            });
+        }
+
+        function mergeLeads(backendList, localList) {
+            const map = new Map();
+            backendList.forEach(item => { if (item && item.id) map.set(item.id, item); });
+            localList.forEach(item => {
+                if (item && item.id) {
+                    if (!map.has(item.id)) {
+                        map.set(item.id, item);
+                    } else {
+                        // Preserve newer notes or status if updated locally
+                        const exist = map.get(item.id);
+                        map.set(item.id, { ...exist, ...item });
+                    }
+                }
+            });
+            return deduplicateLeads(Array.from(map.values()));
+        }
+
+        // ----------------------------------------------------
+        // Render Dashboard & Stat Cards
+        // ----------------------------------------------------
+        function renderDashboard() {
+            updateStatsCards();
+            handleSearchFilter();
+        }
+
+        function updateStatsCards() {
+            const total = crmLeads.length;
+            document.getElementById('statTotalLeads').textContent = total;
+
+            // Today's leads calculation (based on IST date)
+            const todayStr = new Date().toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric' });
+            const todayCount = crmLeads.filter(l => l.timestamp && l.timestamp.includes(todayStr.slice(0, 6))).length;
+            document.getElementById('statTodayLeads').textContent = todayCount;
+
+            // Model Breakdown
+            const counts = { '1 SIM': 0, '2 SIM': 0, '4 SIM': 0, '8 SIM': 0 };
+            crmLeads.forEach(l => {
+                const req = String(l.requirement || '').toLowerCase();
+                if (req.includes('1 sim') || req.includes('single sim')) counts['1 SIM']++;
+                else if (req.includes('2 sim') || req.includes('dual sim')) counts['2 SIM']++;
+                else if (req.includes('4 sim')) counts['4 SIM']++;
+                else if (req.includes('8 sim')) counts['8 SIM']++;
+            });
+
+            document.getElementById('statModelBreakdown').innerHTML = `
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <span class="pill-req pill-1sim">1 SIM: ${counts['1 SIM']}</span>
+                    <span class="pill-req pill-2sim">2 SIM: ${counts['2 SIM']}</span>
+                    <span class="pill-req pill-4sim">4 SIM: ${counts['4 SIM']}</span>
+                    <span class="pill-req pill-8sim">8 SIM: ${counts['8 SIM']}</span>
+                </div>
+            `;
+
+            // Converted & Contacted
+            const converted = crmLeads.filter(l => l.status === 'Converted').length;
+            const contacted = crmLeads.filter(l => l.status === 'Contacted' || l.status === 'In Discussion' || l.status === 'Converted').length;
+            const contactedPct = total > 0 ? Math.round((contacted / total) * 100) : 0;
+
+            document.getElementById('statConvertedLeads').textContent = `${converted} Won`;
+            document.getElementById('statContactedRate').textContent = `${contacted} (${contactedPct}%) engaged`;
+        }
+
+        // ----------------------------------------------------
+        // Search & Filter Logic
+        // ----------------------------------------------------
+        function handleSearchFilter() {
+            const query = document.getElementById('tableSearchInput').value.toLowerCase().trim();
+            const modelFilter = document.getElementById('modelFilterSelect').value;
+            const statusFilter = document.getElementById('statusFilterSelect').value;
+            const sortFilter = document.getElementById('sortFilterSelect').value;
+
+            let filtered = crmLeads.filter(lead => {
+                // Text search
+                const name = String(lead.name || lead.customerName || '').toLowerCase();
+                const mobile = String(lead.mobile || lead.customerMobileNumber || '');
+                const email = String(lead.email || '').toLowerCase();
+                const req = String(lead.requirement || '').toLowerCase();
+                const notes = String(lead.notes || '').toLowerCase();
+
+                const matchesQuery = !query || name.includes(query) || mobile.includes(query) || email.includes(query) || req.includes(query) || notes.includes(query);
+
+                // Model filter
+                let matchesModel = true;
+                if (modelFilter !== 'ALL') {
+                    matchesModel = req.includes(modelFilter.toLowerCase());
+                }
+
+                // Status filter
+                let matchesStatus = true;
+                if (statusFilter !== 'ALL') {
+                    matchesStatus = (lead.status || 'New Lead') === statusFilter;
+                }
+
+                return matchesQuery && matchesModel && matchesStatus;
+            });
+
+            // Sorting
+            if (sortFilter === 'oldest') {
+                filtered.reverse();
+            }
+
+            renderTableRows(filtered);
+        }
+
+        function renderTableRows(leads) {
+            const tbody = document.getElementById('leadsTableBody');
+            const emptyState = document.getElementById('tableEmptyState');
+
+            if (!leads || leads.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            let html = '';
+            leads.forEach((l, idx) => {
+                const name = escapeHtml(l.name || l.customerName || 'Customer');
+                const rawMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '');
+                const formattedMobile = rawMobile ? `+91 ${rawMobile}` : 'No Mobile';
+                const req = escapeHtml(l.requirement || 'IVR Solution');
+                const email = l.email && l.email !== 'Not Provided' ? escapeHtml(l.email) : null;
+                const source = escapeHtml(l.source || 'Website Form');
+                const timestamp = escapeHtml(l.timestamp || 'Just now');
+                const leadId = l.id || `LEAD_${idx}`;
+                const status = l.status || 'New Lead';
+                const notes = escapeHtml(l.notes || '');
+
+                // Requirement Badge Class
+                let pillClass = 'pill-other';
+                const lowReq = req.toLowerCase();
+                if (lowReq.includes('1 sim') || lowReq.includes('single sim')) pillClass = 'pill-1sim';
+                else if (lowReq.includes('2 sim') || lowReq.includes('dual sim')) pillClass = 'pill-2sim';
+                else if (lowReq.includes('4 sim')) pillClass = 'pill-4sim';
+                else if (lowReq.includes('8 sim')) pillClass = 'pill-8sim';
+
+                // WhatsApp URL with greeting message
+                const waText = encodeURIComponent(`Hello ${name}, thank you for contacting Yug Smart IVR regarding ${req}. How can our telecom specialists assist you today?`);
+                const waUrl = `https://wa.me/91${rawMobile}?text=${waText}`;
+
+                html += `
+                    <tr>
+                        <td>
+                            <div class="lead-id-time">
+                                <strong style="color:#ffffff;">#${leadId.slice(-6)}</strong><br>
+                                ${timestamp}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cust-name">${name}</div>
+                            <div class="cust-contact">
+                                <a href="tel:+91${rawMobile}" class="cust-mobile">${formattedMobile}</a>
+                                <a href="tel:+91${rawMobile}" class="action-icon-btn action-call-btn" title="Call Customer">📞</a>
+                                <a href="${waUrl}" target="_blank" rel="noopener" class="action-icon-btn action-wa-btn" title="WhatsApp Customer">💬</a>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="pill-req ${pillClass}">${req}</span>
+                        </td>
+                        <td>
+                            ${email ? `<a href="mailto:${email}" style="color:#38bdf8; text-decoration:none;">${email}</a>` : '<span style="color:#64748b;">Not Provided</span>'}
+                        </td>
+                        <td>
+                            <span style="font-size:11px; color:#94a3b8;">${source}</span>
+                        </td>
+                        <td>
+                            <select class="status-select ${getStatusClass(status)}" onchange="updateLeadStatus('${leadId}', this.value)">
+                                <option value="New Lead" ${status === 'New Lead' ? 'selected' : ''}>🟢 New Lead</option>
+                                <option value="Contacted" ${status === 'Contacted' ? 'selected' : ''}>🟡 Contacted</option>
+                                <option value="In Discussion" ${status === 'In Discussion' ? 'selected' : ''}>🟣 In Discussion</option>
+                                <option value="Converted" ${status === 'Converted' ? 'selected' : ''}>🏆 Converted</option>
+                                <option value="Closed / Lost" ${status === 'Closed / Lost' ? 'selected' : ''}>🔴 Closed / Lost</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="notes-input" value="${notes}" placeholder="Add note & press Enter..." onblur="updateLeadNotes('${leadId}', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
+                        </td>
+                        <td style="text-align:center;">
+                            <button type="button" class="btn-delete-row" onclick="deleteLeadRecord('${leadId}')" title="Delete lead">&times;</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'New Lead': return 'status-new';
+                case 'Contacted': return 'status-contacted';
+                case 'In Discussion': return 'status-progress';
+                case 'Converted': return 'status-converted';
+                case 'Closed / Lost': return 'status-closed';
+                default: return 'status-new';
+            }
+        }
+
+        // ----------------------------------------------------
+        // Update Lead Status & Notes
+        // ----------------------------------------------------
+        async function updateLeadStatus(leadId, newStatus) {
+            const lead = crmLeads.find(l => l.id === leadId);
+            if (lead) {
+                lead.status = newStatus;
+                localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+                updateStatsCards();
+                showToast(`Status updated to "${newStatus}"`, '✓');
+
+                // Sync with backend API
+                fetch('/api/leads', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                    },
+                    body: JSON.stringify({ action: 'update_status', leadId, status: newStatus })
+                }).catch(() => {});
+            }
+        }
+
+        async function updateLeadNotes(leadId, notes) {
+            const lead = crmLeads.find(l => l.id === leadId);
+            if (lead && lead.notes !== notes) {
+                lead.notes = notes;
+                localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+                showToast('Sales notes saved', '💾');
+
+                // Sync with backend API
+                fetch('/api/leads', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                    },
+                    body: JSON.stringify({ action: 'update_status', leadId, notes })
+                }).catch(() => {});
+            }
+        }
+
+        async function deleteLeadRecord(leadId) {
+            if (!confirm('Are you sure you want to remove this lead record?')) return;
+
+            crmLeads = crmLeads.filter(l => l.id !== leadId);
+            localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+            renderDashboard();
+            showToast('Lead record removed', '🗑');
+
+            // Sync with backend API
+            fetch('/api/leads', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                },
+                body: JSON.stringify({ action: 'delete', leadId })
+            }).catch(() => {});
+        }
+
+        // ----------------------------------------------------
+        // Manual Lead Entry Modal
+        // ----------------------------------------------------
+        function openAddLeadModal() {
+            document.getElementById('addLeadModal').style.display = 'flex';
+        }
+
+        function closeAddLeadModal() {
+            document.getElementById('addLeadModal').style.display = 'none';
+        }
+
+        async function handleSaveManualLead(e) {
+            e.preventDefault();
+            const name = document.getElementById('manualName').value.trim();
+            const mobile = document.getElementById('manualMobile').value.trim();
+            const requirement = document.getElementById('manualRequirement').value;
+            const email = document.getElementById('manualEmail').value.trim();
+            const source = document.getElementById('manualSource').value.trim();
+            const notes = document.getElementById('manualNotes').value.trim();
+
+            const timestamp = new Date().toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }) + ' IST';
+
+            const newLead = {
+                id: 'LEAD_' + Date.now(),
+                name,
+                customerName: name,
+                mobile,
+                customerMobileNumber: '+91 ' + mobile,
+                requirement,
+                email: email || 'Not Provided',
+                source: source || 'Manual Entry',
+                timestamp,
+                status: 'New Lead',
+                notes
+            };
+
+            crmLeads.unshift(newLead);
+            localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+            closeAddLeadModal();
+            renderDashboard();
+            showToast('New lead added to CRM!', '🎉');
+
+            // Reset form
+            e.target.reset();
+
+            // Sync with backend
+            fetch('/api/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'capture', lead: newLead })
+            }).catch(() => {});
+        }
+
+        // ----------------------------------------------------
+        // Export to CSV
+        // ----------------------------------------------------
+        function exportLeadsCsv() {
+            if (!crmLeads || crmLeads.length === 0) {
+                alert('No leads available to export.');
+                return;
+            }
+
+            const headers = ['Lead ID', 'Date & Time (IST)', 'Customer Name', 'Mobile Number', 'Requirement', 'Customer Email', 'Status', 'Source', 'Sales Notes'];
+            const rows = crmLeads.map(l => [
+                `"${l.id || ''}"`,
+                `"${l.timestamp || ''}"`,
+                `"${(l.name || l.customerName || '').replace(/"/g, '""')}"`,
+                `"+91 ${String(l.mobile || '').replace(/\D/g, '')}"`,
+                `"${(l.requirement || '').replace(/"/g, '""')}"`,
+                `"${(l.email || '').replace(/"/g, '""')}"`,
+                `"${l.status || 'New Lead'}"`,
+                `"${(l.source || '').replace(/"/g, '""')}"`,
+                `"${(l.notes || '').replace(/"/g, '""')}"`
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `YugSmartIVR_Leads_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('CSV export downloaded!', '📥');
+        }
+
+        // ----------------------------------------------------
+        // Live Clock & Real-Time Sync Listeners
+        // ----------------------------------------------------
+        function startLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                const istTime = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+                const clockEl = document.getElementById('liveClockDisplay');
+                if (clockEl) clockEl.textContent = `${istTime} IST`;
+            }, 1000);
+        }
+
+        // Listen for new leads submitted on any other tab in the browser
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'yug_crm_leads' || e.key === 'yug_leads_tracker') {
+                fetchLeadsFromBackend();
+                showToast('🔔 New Lead captured in real time!', '🟢');
+            }
+        });
+
+        // Listen for real-time window events
+        window.addEventListener('yug_lead_captured', (e) => {
+            const lead = e.detail;
+            showToast(`🔔 New Lead: ${lead.name || 'Customer'} (${lead.requirement || 'IVR'})`, '🟢');
+            fetchLeadsFromBackend();
+        });
+
+        // Toast Helper
+        let toastTimer = null;
+        function showToast(message, icon = '✓') {
+            const toast = document.getElementById('crmToast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            startLiveClock();
+            checkExistingSession();
+        });
+    </script>
+</body>
+</html>

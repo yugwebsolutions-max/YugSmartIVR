@@ -230,17 +230,20 @@ module.exports = async function handler(req, res) {
 
     try {
         // Parse request body
-        let body = req.body;
-        if (!body || typeof body !== 'object') {
-            const rawBody = await new Promise((resolve) => {
-                let chunks = '';
-                req.on('data', chunk => { chunks += chunk; });
-                req.on('end', () => resolve(chunks));
-            });
-            try {
-                body = JSON.parse(rawBody || '{}');
-            } catch (e) {
-                body = {};
+        let body = req.body || {};
+        if (!req.body || typeof req.body !== 'object') {
+            if (typeof req.on === 'function') {
+                const rawBody = await new Promise((resolve) => {
+                    let chunks = '';
+                    req.on('data', chunk => { chunks += chunk; });
+                    req.on('end', () => resolve(chunks));
+                    req.on('error', () => resolve(''));
+                });
+                try {
+                    body = JSON.parse(rawBody || '{}');
+                } catch (e) {
+                    body = {};
+                }
             }
         }
 
@@ -267,13 +270,50 @@ module.exports = async function handler(req, res) {
         }
 
         const leadRecord = {
+            id: 'LEAD_' + Date.now(),
             name: cleanName,
+            customerName: cleanName,
             mobile: cleanMobile,
+            customerMobileNumber: '+91 ' + cleanMobile,
             email: cleanEmail,
             requirement: cleanReq,
             source: cleanSource,
-            timestamp: timestamp
+            timestamp: timestamp,
+            status: 'New Lead',
+            notes: ''
         };
+
+        // Simultaneously persist to CRM lead store
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const localFile = path.join(process.cwd(), 'leads.json');
+            const tmpFile = path.join('/tmp', 'yug_leads.json');
+            
+            let existing = [];
+            if (fs.existsSync(localFile)) {
+                try { existing = JSON.parse(fs.readFileSync(localFile, 'utf8')); } catch (e) {}
+            } else if (fs.existsSync(tmpFile)) {
+                try { existing = JSON.parse(fs.readFileSync(tmpFile, 'utf8')); } catch (e) {}
+            }
+            if (!Array.isArray(existing)) existing = [];
+            existing = existing.filter(l => l && l.id !== leadRecord.id);
+            existing.unshift(leadRecord);
+            try { fs.writeFileSync(localFile, JSON.stringify(existing, null, 2), 'utf8'); } catch (e) {}
+            try { fs.writeFileSync(tmpFile, JSON.stringify(existing, null, 2), 'utf8'); } catch (e) {}
+
+            const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+            const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+            if (kvUrl && kvToken) {
+                fetch(`${kvUrl}/set/yug_crm_leads`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${kvToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(existing)
+                }).catch(() => {});
+            }
+        } catch (crmErr) {
+            console.warn('[CRM Sync Note]:', crmErr.message);
+        }
 
         const emailHtml = buildHtmlEmail(leadRecord);
         const emailSubject = `🔔 New IVR Lead: ${cleanName} - ${cleanReq} (+91 ${cleanMobile})`;
