@@ -1092,10 +1092,23 @@
         let crmLeads = [];
         let activeAdminToken = null;
 
+        function getApiUrl(endpoint) {
+            // When opened via VS Code Live Server (port 5500/5501) or static file preview,
+            // route requests directly to the live production serverless API so leads appear!
+            if (window.location.port === '5500' || window.location.port === '5501' || window.location.protocol === 'file:') {
+                return 'https://yugwebsolutions.com' + endpoint;
+            }
+            return endpoint;
+        }
+
         // ----------------------------------------------------
         // Authentication & Session
         // ----------------------------------------------------
         function checkExistingSession() {
+            if (window.location.port === '5500' || window.location.port === '5501') {
+                const notice = document.getElementById('liveServerNotice');
+                if (notice) notice.style.display = 'block';
+            }
             const savedToken = sessionStorage.getItem('yug_crm_token') || localStorage.getItem('yug_crm_token');
             if (savedToken) {
                 activeAdminToken = savedToken;
@@ -1135,7 +1148,7 @@
 
             try {
                 // Check with backend API
-                const res = await fetch('/api/leads', {
+                const res = await fetch(getApiUrl('/api/leads'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'login', username, password })
@@ -1212,7 +1225,7 @@
 
             // 2. Fetch from backend API
             try {
-                const res = await fetch('/api/leads', {
+                const res = await fetch(getApiUrl('/api/leads'), {
                     headers: { 'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}` }
                 });
 
@@ -1463,7 +1476,7 @@
                 showToast(`Status updated to "${newStatus}"`, '✓');
 
                 // Sync with backend API
-                fetch('/api/leads', {
+                fetch(getApiUrl('/api/leads'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1482,7 +1495,7 @@
                 showToast('Sales notes saved', '💾');
 
                 // Sync with backend API
-                fetch('/api/leads', {
+                fetch(getApiUrl('/api/leads'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1502,7 +1515,7 @@
             showToast('Lead record removed', '🗑');
 
             // Sync with backend API
-            fetch('/api/leads', {
+            fetch(getApiUrl('/api/leads'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1566,7 +1579,7 @@
             e.target.reset();
 
             // Sync with backend
-            fetch('/api/leads', {
+            fetch(getApiUrl('/api/leads'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'capture', lead: newLead })
