@@ -381,31 +381,34 @@
             color: #fca5a5;
         }
 
-        .btn-google-sync {
-            background: rgba(16, 185, 129, 0.12);
-            border-color: rgba(16, 185, 129, 0.35);
+        .live-cloud-status {
+            font-size: 12px;
+            font-family: var(--font-mono);
+            font-weight: 600;
             color: #6ee7b7;
-        }
-
-        .btn-google-sync:hover {
-            background: rgba(16, 185, 129, 0.22);
-            border-color: #10b981;
-            color: #ffffff;
-        }
-
-        .google-sync-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #64748b;
-            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
             transition: all 0.3s ease;
         }
 
-        .google-sync-dot.connected {
+        .cloud-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
             background: #10b981;
             box-shadow: 0 0 10px #10b981;
             animation: pulseDot 2s infinite;
+        }
+
+        .cloud-pulse-dot.error {
+            background: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
         }
 
         /* ----------------------------------------------------
@@ -1340,13 +1343,14 @@
                     <span id="liveClockDisplay">00:00:00 IST</span>
                 </div>
 
+                <div class="live-cloud-status" id="liveCloudStatus" title="Automatic Google Sheet Real-time Sync Active">
+                    <span class="cloud-pulse-dot" id="cloudPulseDot"></span>
+                    <span id="cloudStatusText">Cloud Live</span>
+                </div>
+
                 <div class="header-actions">
                     <button type="button" class="btn-action" onclick="fetchLeadsFromBackend(true)" title="Force Refresh">
                         <span id="refreshIcon">🔄</span> Refresh
-                    </button>
-                    <button type="button" class="btn-action btn-google-sync" id="googleSyncBtn" onclick="openGoogleSyncModal()" title="Google Sheet Cloud Database Sync">
-                        <span class="google-sync-dot" id="googleSyncDot"></span>
-                        <span id="googleSyncBtnText">Google Sheet</span>
                     </button>
                     <button type="button" class="btn-action btn-primary-action" onclick="openAddLeadModal()">
                         + Add Lead
@@ -1578,8 +1582,7 @@
                 <div class="form-group">
                     <label for="googleScriptUrlInput">Google Apps Script Web App URL *</label>
                     <input type="url" id="googleScriptUrlInput" class="form-input" 
-                        value="https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec"
-                        placeholder="https://script.google.com/macros/s/.../exec"
+                        value="https://script.google.com/macros/s/AKfycbw5FdgUFI59hyCRbbJeemq21blOcD4FpN4IPW3g3BOC5zxn8kckAX-Yv7DgyX2l8DLY/exec"
                         autocomplete="off" spellcheck="false" required>
                     <span style="display:block; font-size:11.5px; color:var(--text-dim); margin-top:6px; line-height:1.4;">
                         Must end with <code style="color:var(--yug-emerald-light);">/exec</code> and be deployed with access set to <em>"Anyone"</em>.
@@ -2008,41 +2011,39 @@ function respondJson(obj, e) {
         }
 
         function updateGoogleSyncIndicator(status = 'checking') {
-            const dot = document.getElementById('googleSyncDot');
-            const btnText = document.getElementById('googleSyncBtnText');
-            const url = getGoogleScriptUrl();
-
-            if (!url) {
-                if (dot) {
-                    dot.className = 'google-sync-dot';
-                    dot.style.background = '#64748b';
-                    dot.style.boxShadow = 'none';
-                }
-                if (btnText) btnText.textContent = 'Google Sheet';
-                return;
-            }
+            const dot = document.getElementById('cloudPulseDot');
+            const text = document.getElementById('cloudStatusText');
+            const box = document.getElementById('liveCloudStatus');
 
             if (status === 'connected') {
                 if (dot) {
-                    dot.className = 'google-sync-dot connected';
+                    dot.className = 'cloud-pulse-dot';
                     dot.style.background = '#10b981';
                     dot.style.boxShadow = '0 0 10px #10b981';
                 }
-                if (btnText) btnText.textContent = 'Sheet Synced';
+                if (text) text.textContent = 'Cloud Live';
+                if (box) {
+                    box.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+                    box.style.color = '#6ee7b7';
+                }
             } else if (status === 'error') {
                 if (dot) {
-                    dot.className = 'google-sync-dot';
+                    dot.className = 'cloud-pulse-dot error';
                     dot.style.background = '#ef4444';
                     dot.style.boxShadow = '0 0 8px #ef4444';
                 }
-                if (btnText) btnText.textContent = 'Sheet Error';
+                if (text) text.textContent = 'Reconnecting...';
+                if (box) {
+                    box.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+                    box.style.color = '#fca5a5';
+                }
             } else {
                 if (dot) {
-                    dot.className = 'google-sync-dot';
+                    dot.className = 'cloud-pulse-dot';
                     dot.style.background = '#38bdf8';
                     dot.style.boxShadow = '0 0 8px #38bdf8';
                 }
-                if (btnText) btnText.textContent = 'Connecting...';
+                if (text) text.textContent = 'Syncing...';
             }
         }
 
@@ -2316,7 +2317,7 @@ function respondJson(obj, e) {
             document.body.removeChild(ta);
         }
 
-        // Automatic polling timer (runs every 25 seconds when logged in)
+        // Automatic polling timer (runs every 10 seconds for real-time reflection)
         let autoPollTimer = null;
         function startAutoPolling() {
             if (autoPollTimer) clearInterval(autoPollTimer);
@@ -2324,7 +2325,7 @@ function respondJson(obj, e) {
                 if (activeAdminToken) {
                     fetchLeadsFromBackend(false, true);
                 }
-            }, 25000);
+            }, 10000);
         }
 
         function stopAutoPolling() {
@@ -2529,6 +2530,9 @@ function respondJson(obj, e) {
 
             await Promise.allSettled(tasks);
 
+            const previousCount = crmLeads.length;
+            const isInitialLoad = previousCount === 0;
+
             // 3. Deduplicate and merge Google Sheet + Backend + Local Cache
             crmLeads = deduplicateLeads([...sheetLeads, ...backendLeads, ...localCache]);
 
@@ -2539,10 +2543,39 @@ function respondJson(obj, e) {
 
             renderDashboard();
 
+            // When new leads arrive automatically from Google Sheet during background poll
+            if (!isInitialLoad && crmLeads.length > previousCount) {
+                const diff = crmLeads.length - previousCount;
+                const topLead = crmLeads[0];
+                const custName = topLead.name || topLead.customerName || 'Customer';
+                showToast(`🔔 ${diff} New Lead automatically arrived: ${custName}!`, '🟢');
+                playNotificationChirp();
+            }
+
             if (forceNotification) {
-                showToast(hasGoogleSync ? `Synced with Google Sheet (${crmLeads.length} leads)` : 'Leads refreshed successfully', '🔄');
+                showToast(`Synced with Google Sheet (${crmLeads.length} leads)`, '🔄');
             }
             if (refreshIcon && !isSilent) setTimeout(() => { refreshIcon.style.animation = ''; }, 600);
+        }
+
+        function playNotificationChirp() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, now);
+                osc.frequency.setValueAtTime(880, now + 0.12);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } catch (e) {}
         }
 
         function getDeletedLeadsSet() {
