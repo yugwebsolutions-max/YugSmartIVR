@@ -24,7 +24,7 @@
         directFormSubmitUrl: 'https://formsubmit.co/f40be870712b3641a8926657ccfe7d90',
         localNodeEndpoint: 'http://localhost:3000/api/leads',
         storageKey: 'yug_leads_tracker',
-        googleScriptUrl: '' // Auto-loaded from localStorage or window.YUG_GOOGLE_SCRIPT_URL
+        googleScriptUrl: 'https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec'
     };
 
     /**

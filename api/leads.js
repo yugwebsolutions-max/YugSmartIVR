@@ -30,7 +30,7 @@ const TMP_FILE = path.join('/tmp', 'yug_leads.json');
 const GOOGLE_URL_FILE = path.join('/tmp', 'google_url.txt');
 
 // Active Google Apps Script Web App URL
-let activeGoogleScriptUrl = process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || '';
+let activeGoogleScriptUrl = process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec';
 try {
     if (!activeGoogleScriptUrl && fs.existsSync(GOOGLE_URL_FILE)) {
         activeGoogleScriptUrl = fs.readFileSync(GOOGLE_URL_FILE, 'utf8').trim();

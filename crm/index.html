@@ -1578,7 +1578,8 @@
                 <div class="form-group">
                     <label for="googleScriptUrlInput">Google Apps Script Web App URL *</label>
                     <input type="url" id="googleScriptUrlInput" class="form-input" 
-                        placeholder="https://script.google.com/macros/s/AKfycbwN0IDCZCRzmneSVCwCVQgpOkRytkrCetlPquToGV-BVug5C1aPG9o9hoUqWeLpVHP0/exec"
+                        value="https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec"
+                        placeholder="https://script.google.com/macros/s/.../exec"
                         autocomplete="off" spellcheck="false" required>
                     <span style="display:block; font-size:11.5px; color:var(--text-dim); margin-top:6px; line-height:1.4;">
                         Must end with <code style="color:var(--yug-emerald-light);">/exec</code> and be deployed with access set to <em>"Anyone"</em>.
@@ -2003,7 +2004,7 @@ function respondJson(obj, e) {
             if (window.YUG_GOOGLE_SCRIPT_URL && String(window.YUG_GOOGLE_SCRIPT_URL).includes('script.google.com')) {
                 return String(window.YUG_GOOGLE_SCRIPT_URL).trim();
             }
-            return '';
+            return 'https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec';
         }
 
         function updateGoogleSyncIndicator(status = 'checking') {
