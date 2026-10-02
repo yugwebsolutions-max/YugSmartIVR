@@ -528,19 +528,37 @@
         }
 
         .select-filter {
-            background: #0d1217;
+            background: #0d1217 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
             border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 9px 14px;
-            border-radius: 8px;
+            color: #f1f5f9;
+            padding: 9px 34px 9px 14px;
+            border-radius: 10px;
             font-size: 13px;
+            font-weight: 500;
             font-family: inherit;
             outline: none;
             cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        .select-filter:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background-color: #121820;
         }
 
         .select-filter:focus {
             border-color: var(--yug-emerald);
+            box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.2);
+        }
+
+        .select-filter option {
+            background: #151b22;
+            color: #f1f5f9;
+            padding: 10px;
         }
 
         /* ----------------------------------------------------
@@ -653,24 +671,257 @@
         .pill-8sim { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
         .pill-other { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
 
-        /* Status Dropdown */
-        .status-select {
-            background: #0d1217;
-            border: 1px solid var(--border-subtle);
-            color: #ffffff;
+        /* Custom Modern Status Dropdown */
+        .custom-status-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 11px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            padding: 6px 10px;
-            border-radius: 8px;
-            outline: none;
             cursor: pointer;
+            user-select: none;
+            border: 1px solid transparent;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
         }
 
-        .status-new { border-color: #38bdf8; color: #38bdf8; }
-        .status-contacted { border-color: #fbbf24; color: #fbbf24; }
-        .status-progress { border-color: #c084fc; color: #c084fc; }
-        .status-converted { border-color: #34d399; color: #34d399; }
-        .status-closed { border-color: #ef4444; color: #f87171; }
+        .custom-status-trigger:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .custom-status-trigger:active {
+            transform: scale(0.97);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .status-chevron-icon {
+            margin-left: 2px;
+            opacity: 0.7;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-status-trigger.open .status-chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Pill Status Color Variants */
+        .status-pill-new {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.35);
+        }
+        .status-pill-new .status-dot {
+            background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
+        }
+
+        .status-pill-contacted {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+            border-color: rgba(251, 191, 36, 0.35);
+        }
+        .status-pill-contacted .status-dot {
+            background: #fbbf24;
+            box-shadow: 0 0 8px #fbbf24;
+        }
+
+        .status-pill-discussion {
+            background: rgba(192, 132, 252, 0.12);
+            color: #c084fc;
+            border-color: rgba(192, 132, 252, 0.35);
+        }
+        .status-pill-discussion .status-dot {
+            background: #c084fc;
+            box-shadow: 0 0 8px #c084fc;
+        }
+
+        .status-pill-converted {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.35);
+        }
+        .status-pill-converted .status-dot {
+            background: #34d399;
+            box-shadow: 0 0 8px #34d399;
+        }
+
+        .status-pill-closed {
+            background: rgba(248, 113, 113, 0.12);
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.35);
+        }
+        .status-pill-closed .status-dot {
+            background: #f87171;
+            box-shadow: 0 0 8px #f87171;
+        }
+
+        /* Global Floating Dropdown Menu (Fixed position, never clipped) */
+        .global-floating-menu {
+            position: fixed;
+            z-index: 99999;
+            background: rgba(20, 26, 34, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.5);
+            min-width: 190px;
+            padding: 6px;
+            display: none;
+            animation: menuFadeIn 0.15s ease-out;
+            user-select: none;
+        }
+
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .global-menu-header {
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 6px 10px 4px;
+        }
+
+        .global-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .global-menu-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .global-menu-item.active {
+            background: rgba(0, 150, 64, 0.16);
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        .global-item-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .global-menu-item .item-check {
+            width: 14px;
+            height: 14px;
+            stroke: #34d399;
+            stroke-width: 3;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .global-menu-item.active .item-check {
+            opacity: 1;
+        }
+
+        /* Modal Requirement Custom Select */
+        .custom-select-wrap {
+            position: relative;
+            user-select: none;
+        }
+
+        .custom-select-display {
+            width: 100%;
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #ffffff;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .custom-select-wrap.open .custom-select-display {
+            border-color: var(--yug-emerald);
+            box-shadow: 0 0 0 3px rgba(0, 150, 64, 0.2);
+        }
+
+        .custom-select-wrap.open .select-chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #161c24;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+            z-index: 1050;
+            padding: 6px;
+            max-height: 240px;
+            overflow-y: auto;
+            display: none;
+            animation: menuFadeIn 0.15s ease-out;
+        }
+
+        .select-opt {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            font-size: 13.5px;
+            color: #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .select-opt:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .select-opt.selected {
+            background: rgba(0, 150, 64, 0.18);
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        .select-opt .opt-check {
+            font-weight: 800;
+            color: #34d399;
+            opacity: 0;
+            font-size: 14px;
+        }
+
+        .select-opt.selected .opt-check {
+            opacity: 1;
+        }
 
         .notes-input {
             width: 100%;
@@ -1044,15 +1295,42 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="manualRequirement">Selected Requirement *</label>
-                    <select id="manualRequirement" class="form-input" required>
-                        <option value="4 SIM IVR">4 SIM IVR (Popular)</option>
-                        <option value="Single SIM IVR">Single SIM IVR</option>
-                        <option value="2 SIM IVR">2 SIM IVR</option>
-                        <option value="8 SIM IVR">8 SIM IVR Enterprise</option>
-                        <option value="Distributor Enquiry">Distributor Enquiry</option>
-                        <option value="Custom IVR Solution">Custom IVR Solution</option>
-                    </select>
+                    <label>Selected Requirement *</label>
+                    <div class="custom-select-wrap" id="modalReqSelectWrap">
+                        <input type="hidden" id="manualRequirement" value="4 SIM IVR (Popular)" required>
+                        <div class="custom-select-display" onclick="toggleModalReqMenu(event)" id="modalReqTrigger" role="button" tabindex="0">
+                            <span class="custom-select-text" id="modalReqText">4 SIM IVR (Popular)</span>
+                            <svg class="select-chevron-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="custom-select-dropdown" id="modalReqDropdown">
+                            <div class="select-opt selected" data-value="4 SIM IVR (Popular)" onclick="selectModalReq('4 SIM IVR (Popular)')">
+                                <span>4 SIM IVR (Popular)</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                            <div class="select-opt" data-value="Single SIM IVR" onclick="selectModalReq('Single SIM IVR')">
+                                <span>Single SIM IVR</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                            <div class="select-opt" data-value="2 SIM IVR" onclick="selectModalReq('2 SIM IVR')">
+                                <span>2 SIM IVR</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                            <div class="select-opt" data-value="8 SIM IVR Enterprise" onclick="selectModalReq('8 SIM IVR Enterprise')">
+                                <span>8 SIM IVR Enterprise</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                            <div class="select-opt" data-value="Distributor Enquiry" onclick="selectModalReq('Distributor Enquiry')">
+                                <span>Distributor Enquiry</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                            <div class="select-opt" data-value="Custom IVR Solution" onclick="selectModalReq('Custom IVR Solution')">
+                                <span>Custom IVR Solution</span>
+                                <span class="opt-check">✓</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1074,6 +1352,46 @@
                     <span>Save Lead to CRM</span>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- Global Floating Status Dropdown Menu (Fixed Position, Portaled to Body) -->
+    <div class="global-floating-menu" id="globalStatusMenu">
+        <div class="global-menu-header">Change Lead Status</div>
+        <div class="global-menu-item" data-status="New Lead" onclick="handleSelectStatus('New Lead')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#38bdf8; box-shadow:0 0 8px #38bdf8;"></span>
+                <span>New Lead</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="global-menu-item" data-status="Contacted" onclick="handleSelectStatus('Contacted')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#fbbf24; box-shadow:0 0 8px #fbbf24;"></span>
+                <span>Contacted</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="global-menu-item" data-status="In Discussion" onclick="handleSelectStatus('In Discussion')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#c084fc; box-shadow:0 0 8px #c084fc;"></span>
+                <span>In Discussion</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="global-menu-item" data-status="Converted" onclick="handleSelectStatus('Converted')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#34d399; box-shadow:0 0 8px #34d399;"></span>
+                <span>Converted</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="global-menu-item" data-status="Closed / Lost" onclick="handleSelectStatus('Closed / Lost')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#f87171; box-shadow:0 0 8px #f87171;"></span>
+                <span>Closed / Lost</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
     </div>
 
@@ -1250,36 +1568,106 @@
             if (refreshIcon) setTimeout(() => { refreshIcon.style.animation = ''; }, 600);
         }
 
+        function getDeletedLeadsSet() {
+            try {
+                const raw = localStorage.getItem('yug_deleted_leads');
+                return raw ? new Set(JSON.parse(raw)) : new Set();
+            } catch (e) {
+                return new Set();
+            }
+        }
+
+        function markLeadDeleted(leadId, mobile) {
+            try {
+                const set = getDeletedLeadsSet();
+                if (leadId) set.add(leadId);
+                if (mobile) set.add('mob_' + mobile);
+                localStorage.setItem('yug_deleted_leads', JSON.stringify(Array.from(set)));
+            } catch (e) {}
+        }
+
+        function isLeadDeleted(lead) {
+            if (!lead) return true;
+            const deletedSet = getDeletedLeadsSet();
+            if (lead.id && deletedSet.has(lead.id)) return true;
+            const mob = String(lead.mobile || lead.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+            if (mob && deletedSet.has('mob_' + mob)) return true;
+            return false;
+        }
+
         function deduplicateLeads(list) {
-            const map = new Map();
-            list.forEach(item => {
-                if (item && (item.id || item.mobile)) {
-                    const key = item.id || (item.mobile + '_' + item.timestamp);
-                    if (!map.has(key)) map.set(key, item);
-                }
-            });
-            return Array.from(map.values()).sort((a, b) => {
+            if (!Array.isArray(list)) return [];
+            
+            // 1. Purge deleted leads
+            const validLeads = list.filter(item => item && !isLeadDeleted(item));
+
+            // 2. Sort candidates newest first
+            const sorted = validLeads.slice().sort((a, b) => {
                 const idA = parseInt(String(a.id || '').replace(/\D/g, '')) || 0;
                 const idB = parseInt(String(b.id || '').replace(/\D/g, '')) || 0;
                 return idB - idA;
             });
+
+            // 3. Smart Deduplication: deduplicate identical phone submissions
+            const deduplicated = [];
+            const seenIds = new Set();
+
+            for (const item of sorted) {
+                const itemId = item.id;
+                if (itemId && seenIds.has(itemId)) continue;
+
+                const itemMobile = String(item.mobile || item.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                const itemTimeMs = parseInt(String(item.id || '').replace(/\D/g, '')) || 0;
+                const itemReq = String(item.requirement || '').toLowerCase().trim();
+                const itemDateStr = String(item.timestamp || '').slice(0, 11).trim();
+
+                // Look for existing twin match in deduplicated list
+                let existingMatch = null;
+                if (itemMobile && itemMobile.length >= 10) {
+                    existingMatch = deduplicated.find(existing => {
+                        const exMobile = String(existing.mobile || existing.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                        if (exMobile !== itemMobile) return false;
+
+                        // Same phone: check timestamp or time difference
+                        if (existing.timestamp && item.timestamp && existing.timestamp === item.timestamp) return true;
+                        
+                        const exTimeMs = parseInt(String(existing.id || '').replace(/\D/g, '')) || 0;
+                        if (exTimeMs > 0 && itemTimeMs > 0 && Math.abs(exTimeMs - itemTimeMs) < 15 * 60 * 1000) {
+                            return true;
+                        }
+
+                        // Same day & requirement
+                        const exReq = String(existing.requirement || '').toLowerCase().trim();
+                        const exDateStr = String(existing.timestamp || '').slice(0, 11).trim();
+                        if (exDateStr && itemDateStr && exDateStr === itemDateStr && exReq === itemReq) {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                }
+
+                if (existingMatch) {
+                    // Merge info: retain non-default status and notes if present
+                    if ((!existingMatch.status || existingMatch.status === 'New Lead') && item.status && item.status !== 'New Lead') {
+                        existingMatch.status = item.status;
+                    }
+                    if (!existingMatch.notes && item.notes) {
+                        existingMatch.notes = item.notes;
+                    }
+                    if (itemId) seenIds.add(itemId);
+                } else {
+                    deduplicated.push({ ...item });
+                    if (itemId) seenIds.add(itemId);
+                }
+            }
+
+            return deduplicated;
         }
 
         function mergeLeads(backendList, localList) {
-            const map = new Map();
-            backendList.forEach(item => { if (item && item.id) map.set(item.id, item); });
-            localList.forEach(item => {
-                if (item && item.id) {
-                    if (!map.has(item.id)) {
-                        map.set(item.id, item);
-                    } else {
-                        // Preserve newer notes or status if updated locally
-                        const exist = map.get(item.id);
-                        map.set(item.id, { ...exist, ...item });
-                    }
-                }
-            });
-            return deduplicateLeads(Array.from(map.values()));
+            const combined = [...(Array.isArray(backendList) ? backendList : []), ...(Array.isArray(localList) ? localList : [])];
+            return deduplicateLeads(combined);
         }
 
         // ----------------------------------------------------
@@ -1432,13 +1820,13 @@
                             <span style="font-size:11px; color:#94a3b8;">${source}</span>
                         </td>
                         <td>
-                            <select class="status-select ${getStatusClass(status)}" onchange="updateLeadStatus('${leadId}', this.value)">
-                                <option value="New Lead" ${status === 'New Lead' ? 'selected' : ''}>🟢 New Lead</option>
-                                <option value="Contacted" ${status === 'Contacted' ? 'selected' : ''}>🟡 Contacted</option>
-                                <option value="In Discussion" ${status === 'In Discussion' ? 'selected' : ''}>🟣 In Discussion</option>
-                                <option value="Converted" ${status === 'Converted' ? 'selected' : ''}>🏆 Converted</option>
-                                <option value="Closed / Lost" ${status === 'Closed / Lost' ? 'selected' : ''}>🔴 Closed / Lost</option>
-                            </select>
+                            <div class="custom-status-trigger ${getStatusClass(status)}" onclick="openStatusDropdown(event, '${leadId}')" id="statusTrigger_${leadId}" title="Click to change status" role="button" tabindex="0">
+                                <span class="status-dot"></span>
+                                <span class="status-text">${escapeHtml(status)}</span>
+                                <svg class="status-chevron-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
                         </td>
                         <td>
                             <input type="text" class="notes-input" value="${notes}" placeholder="Add note & press Enter..." onblur="updateLeadNotes('${leadId}', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
@@ -1455,13 +1843,130 @@
 
         function getStatusClass(status) {
             switch(status) {
-                case 'New Lead': return 'status-new';
-                case 'Contacted': return 'status-contacted';
-                case 'In Discussion': return 'status-progress';
-                case 'Converted': return 'status-converted';
-                case 'Closed / Lost': return 'status-closed';
-                default: return 'status-new';
+                case 'New Lead': return 'status-pill-new';
+                case 'Contacted': return 'status-pill-contacted';
+                case 'In Discussion': return 'status-pill-discussion';
+                case 'Converted': return 'status-pill-converted';
+                case 'Closed / Lost': return 'status-pill-closed';
+                default: return 'status-pill-new';
             }
+        }
+
+        // ----------------------------------------------------
+        // Modern Custom Status Dropdown Controller
+        // ----------------------------------------------------
+        let activeDropdownLeadId = null;
+
+        function openStatusDropdown(e, leadId) {
+            e.stopPropagation();
+            const trigger = document.getElementById('statusTrigger_' + leadId);
+            const menu = document.getElementById('globalStatusMenu');
+            if (!trigger || !menu) return;
+
+            if (activeDropdownLeadId === leadId && menu.style.display === 'block') {
+                closeStatusDropdown();
+                return;
+            }
+
+            if (activeDropdownLeadId) {
+                const prevTrigger = document.getElementById('statusTrigger_' + activeDropdownLeadId);
+                if (prevTrigger) prevTrigger.classList.remove('open');
+            }
+
+            activeDropdownLeadId = leadId;
+            trigger.classList.add('open');
+
+            const currentLead = crmLeads.find(l => l.id === leadId);
+            const currentStatus = currentLead ? (currentLead.status || 'New Lead') : 'New Lead';
+
+            const items = menu.querySelectorAll('.global-menu-item');
+            items.forEach(item => {
+                if (item.getAttribute('data-status') === currentStatus) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            menu.style.display = 'block';
+            const rect = trigger.getBoundingClientRect();
+            const menuWidth = 190;
+            const menuHeight = 220;
+
+            let top = rect.bottom + 6;
+            let left = rect.left;
+
+            if (top + menuHeight > window.innerHeight && rect.top > menuHeight) {
+                top = rect.top - menuHeight - 6;
+            }
+
+            if (left + menuWidth > window.innerWidth - 12) {
+                left = window.innerWidth - menuWidth - 12;
+            }
+            if (left < 10) left = 10;
+
+            menu.style.top = `${top}px`;
+            menu.style.left = `${left}px`;
+        }
+
+        function closeStatusDropdown() {
+            const menu = document.getElementById('globalStatusMenu');
+            if (menu) menu.style.display = 'none';
+            if (activeDropdownLeadId) {
+                const trigger = document.getElementById('statusTrigger_' + activeDropdownLeadId);
+                if (trigger) trigger.classList.remove('open');
+                activeDropdownLeadId = null;
+            }
+        }
+
+        function handleSelectStatus(newStatus) {
+            if (!activeDropdownLeadId) return;
+            const leadId = activeDropdownLeadId;
+            closeStatusDropdown();
+            updateLeadStatus(leadId, newStatus);
+        }
+
+        // ----------------------------------------------------
+        // Modern Modal Requirement Dropdown Controller
+        // ----------------------------------------------------
+        function toggleModalReqMenu(e) {
+            e.stopPropagation();
+            const wrap = document.getElementById('modalReqSelectWrap');
+            const menu = document.getElementById('modalReqDropdown');
+            if (!wrap || !menu) return;
+
+            const isOpen = wrap.classList.contains('open');
+            if (isOpen) {
+                closeModalReqMenu();
+            } else {
+                wrap.classList.add('open');
+                menu.style.display = 'block';
+            }
+        }
+
+        function closeModalReqMenu() {
+            const wrap = document.getElementById('modalReqSelectWrap');
+            const menu = document.getElementById('modalReqDropdown');
+            if (wrap) wrap.classList.remove('open');
+            if (menu) menu.style.display = 'none';
+        }
+
+        function selectModalReq(val) {
+            const hiddenInput = document.getElementById('manualRequirement');
+            const displaySpan = document.getElementById('modalReqText');
+            if (hiddenInput) hiddenInput.value = val;
+            if (displaySpan) displaySpan.textContent = val;
+
+            const opts = document.querySelectorAll('.select-opt');
+            opts.forEach(opt => {
+                if (opt.getAttribute('data-value') === val) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+
+            closeModalReqMenu();
         }
 
         // ----------------------------------------------------
@@ -1473,6 +1978,7 @@
                 lead.status = newStatus;
                 localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
                 updateStatsCards();
+                handleSearchFilter(); // Re-render table with updated status badge
                 showToast(`Status updated to "${newStatus}"`, '✓');
 
                 // Sync with backend API
@@ -1507,21 +2013,55 @@
         }
 
         async function deleteLeadRecord(leadId) {
-            if (!confirm('Are you sure you want to remove this lead record?')) return;
+            if (!confirm('Are you sure you want to permanently delete this lead record?')) return;
 
-            crmLeads = crmLeads.filter(l => l.id !== leadId);
+            const targetLead = crmLeads.find(l => l.id === leadId);
+            const targetMobile = targetLead ? String(targetLead.mobile || targetLead.customerMobileNumber || '').replace(/\D/g, '').slice(-10) : '';
+
+            // 1. Mark as deleted in persistent set
+            markLeadDeleted(leadId, targetMobile);
+
+            // 2. Remove from in-memory list (and any duplicate twin with same mobile)
+            crmLeads = crmLeads.filter(l => {
+                if (l.id === leadId) return false;
+                if (targetMobile) {
+                    const lMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                    if (lMobile === targetMobile) return false;
+                }
+                return true;
+            });
+
+            // 3. Purge from yug_crm_leads in localStorage
             localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
-            renderDashboard();
-            showToast('Lead record removed', '🗑');
 
-            // Sync with backend API
+            // 4. Purge from yug_leads_tracker in localStorage
+            try {
+                const rawTracker = localStorage.getItem('yug_leads_tracker');
+                if (rawTracker) {
+                    let trackerList = JSON.parse(rawTracker);
+                    trackerList = trackerList.filter(l => {
+                        if (l.id === leadId) return false;
+                        if (targetMobile) {
+                            const lMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                            if (lMobile === targetMobile) return false;
+                        }
+                        return true;
+                    });
+                    localStorage.setItem('yug_leads_tracker', JSON.stringify(trackerList, null, 2));
+                }
+            } catch (e) {}
+
+            renderDashboard();
+            showToast('Lead record permanently deleted', '🗑');
+
+            // 5. Sync deletion with backend API
             fetch(getApiUrl('/api/leads'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
                 },
-                body: JSON.stringify({ action: 'delete', leadId })
+                body: JSON.stringify({ action: 'delete', leadId, mobile: targetMobile })
             }).catch(() => {});
         }
 
@@ -1529,10 +2069,12 @@
         // Manual Lead Entry Modal
         // ----------------------------------------------------
         function openAddLeadModal() {
+            selectModalReq('4 SIM IVR (Popular)');
             document.getElementById('addLeadModal').style.display = 'flex';
         }
 
         function closeAddLeadModal() {
+            closeModalReqMenu();
             document.getElementById('addLeadModal').style.display = 'none';
         }
 
@@ -1577,6 +2119,7 @@
 
             // Reset form
             e.target.reset();
+            selectModalReq('4 SIM IVR (Popular)');
 
             // Sync with backend
             fetch(getApiUrl('/api/leads'), {
@@ -1668,6 +2211,21 @@
                 return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
             });
         }
+
+        // Close custom menus on outside click
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('#globalStatusMenu') && !e.target.closest('.custom-status-trigger')) {
+                closeStatusDropdown();
+            }
+            if (!e.target.closest('#modalReqSelectWrap')) {
+                closeModalReqMenu();
+            }
+        });
+
+        // Close floating dropdown on window or table scroll
+        window.addEventListener('scroll', () => {
+            closeStatusDropdown();
+        }, true);
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {

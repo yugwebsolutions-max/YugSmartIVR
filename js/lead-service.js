@@ -50,7 +50,7 @@
             const raw = localStorage.getItem(LEAD_CONFIG.storageKey);
             const list = raw ? JSON.parse(raw) : [];
             const leadRecord = {
-                id: 'LEAD_' + Date.now(),
+                id: lead.id || ('LEAD_' + Date.now()),
                 timestamp: lead.timestamp || getISTTimestamp(),
                 customerName: lead.name,
                 customerMobileNumber: '+91 ' + lead.mobile,
@@ -142,9 +142,11 @@
         const cleanReq = (window.SecurityShield ? window.SecurityShield.sanitize(leadData.requirement) : leadData.requirement) || '4 SIM IVR';
         const cleanSource = (window.SecurityShield ? window.SecurityShield.sanitize(leadData.source) : leadData.source) || window.location.href;
         const timestamp = getISTTimestamp();
+        const persistentLeadId = leadData.id || ('LEAD_' + Date.now());
 
         // 2. Save to JSON Tracker
         const savedRecord = saveLeadToJson({
+            id: persistentLeadId,
             name: cleanName,
             mobile: cleanMobile,
             email: cleanEmail,
@@ -155,6 +157,7 @@
 
         // 3. Dispatch to Clean Vercel Serverless Function (/api/send-lead) - Zero Ads
         const vercelPayload = {
+            id: persistentLeadId,
             name: cleanName,
             mobile: cleanMobile,
             email: cleanEmail,
@@ -183,15 +186,6 @@
             } catch (err) {
                 console.warn('[LeadService] Vercel endpoint notice (using backup if needed):', err);
             }
-
-            // 3b. Simultaneously ingest lead into backend CRM store
-            try {
-                fetch('/api/leads', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'capture', lead: vercelPayload })
-                }).catch(() => {});
-            } catch (e) {}
 
             // 4. Fail-safe Backup: If Vercel credentials are pending or offline, use FormSubmit
             if (!vercelSuccess) {

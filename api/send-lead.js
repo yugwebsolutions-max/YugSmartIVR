@@ -270,7 +270,7 @@ module.exports = async function handler(req, res) {
         }
 
         const leadRecord = {
-            id: 'LEAD_' + Date.now(),
+            id: body.id || ('LEAD_' + Date.now()),
             name: cleanName,
             customerName: cleanName,
             mobile: cleanMobile,
@@ -278,7 +278,7 @@ module.exports = async function handler(req, res) {
             email: cleanEmail,
             requirement: cleanReq,
             source: cleanSource,
-            timestamp: timestamp,
+            timestamp: body.timestamp || timestamp,
             status: 'New Lead',
             notes: ''
         };
@@ -297,7 +297,19 @@ module.exports = async function handler(req, res) {
                 try { existing = JSON.parse(fs.readFileSync(tmpFile, 'utf8')); } catch (e) {}
             }
             if (!Array.isArray(existing)) existing = [];
-            existing = existing.filter(l => l && l.id !== leadRecord.id);
+            const currentMs = Date.now();
+            existing = existing.filter(l => {
+                if (!l) return false;
+                if (l.id === leadRecord.id) return false;
+                const lMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                if (lMobile === cleanMobile.slice(-10)) {
+                    const lTime = parseInt(String(l.id || '').replace(/\D/g, '')) || 0;
+                    if (lTime > 0 && Math.abs(currentMs - lTime) < 10 * 60 * 1000) {
+                        return false;
+                    }
+                }
+                return true;
+            });
             existing.unshift(leadRecord);
             try { fs.writeFileSync(localFile, JSON.stringify(existing, null, 2), 'utf8'); } catch (e) {}
             try { fs.writeFileSync(tmpFile, JSON.stringify(existing, null, 2), 'utf8'); } catch (e) {}

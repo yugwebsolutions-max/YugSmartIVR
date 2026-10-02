@@ -243,8 +243,20 @@ module.exports = async function handler(req, res) {
         };
 
         const existingLeads = await readLeads();
-        // Avoid duplicate ID if existing
-        const filtered = existingLeads.filter(l => l.id !== newLeadRecord.id);
+        const currentMs = Date.now();
+        // Avoid duplicate ID and recent duplicate submission from same phone
+        const filtered = existingLeads.filter(l => {
+            if (!l) return false;
+            if (l.id === newLeadRecord.id) return false;
+            const lMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+            if (lMobile === cleanMobile.slice(-10)) {
+                const lTime = parseInt(String(l.id || '').replace(/\D/g, '')) || 0;
+                if (lTime > 0 && Math.abs(currentMs - lTime) < 10 * 60 * 1000) {
+                    return false;
+                }
+            }
+            return true;
+        });
         filtered.unshift(newLeadRecord);
         await writeLeads(filtered);
 
@@ -353,14 +365,23 @@ module.exports = async function handler(req, res) {
     // ------------------------------------------------------------------------
     if (req.method === 'POST' && (action === 'delete' || req.method === 'DELETE')) {
         const leadId = body.leadId || url.searchParams.get('id');
-        if (!leadId) {
+        const targetMobile = String(body.mobile || url.searchParams.get('mobile') || '').replace(/\D/g, '').slice(-10);
+        if (!leadId && !targetMobile) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'leadId is required' }));
+            res.end(JSON.stringify({ success: false, error: 'leadId or mobile is required' }));
             return;
         }
 
         const leads = await readLeads();
-        const filtered = leads.filter(l => l.id !== leadId);
+        const filtered = leads.filter(l => {
+            if (!l) return false;
+            if (leadId && l.id === leadId) return false;
+            if (targetMobile) {
+                const lMobile = String(l.mobile || l.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                if (lMobile === targetMobile) return false;
+            }
+            return true;
+        });
         await writeLeads(filtered);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
