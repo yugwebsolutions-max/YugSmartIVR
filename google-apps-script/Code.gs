@@ -33,13 +33,54 @@ const HEADERS = [
 ];
 
 /**
+ * Auto-run when the spreadsheet is opened
+ */
+function onOpen() {
+  setupSheetNow();
+}
+
+/**
+ * Click "Run" on this function in Apps Script to immediately initialize headers!
+ */
+function setupSheetNow() {
+  getOrCreateSheet();
+}
+
+/**
+ * Click "Run" on this function to immediately test inserting a sample lead!
+ */
+function testAddSampleLead() {
+  const sheet = getOrCreateSheet();
+  const testId = 'LEAD_TEST_' + new Date().getTime();
+  const testTime = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a') + ' IST';
+  sheet.appendRow([
+    testId,
+    testTime,
+    'Sample Customer',
+    '9876543210',
+    '4 SIM IVR (Popular)',
+    'customer@example.com',
+    'New Lead',
+    'Testing Google Sheet connection from Apps Script',
+    'Setup Test'
+  ]);
+}
+
+/**
  * Helper: Retrieve or create the "Leads" worksheet with formatted emerald headers
  */
 function getOrCreateSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
+    const sheets = ss.getSheets();
+    // If only default "Sheet1" exists and it is empty, reuse and rename it to "Leads"
+    if (sheets.length === 1 && sheets[0].getLastRow() === 0) {
+      sheet = sheets[0];
+      sheet.setName(SHEET_NAME);
+    } else {
+      sheet = ss.insertSheet(SHEET_NAME);
+    }
   }
   
   // Initialize headers if brand new sheet

@@ -1578,7 +1578,7 @@
                 <div class="form-group">
                     <label for="googleScriptUrlInput">Google Apps Script Web App URL *</label>
                     <input type="url" id="googleScriptUrlInput" class="form-input" 
-                        placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                        placeholder="https://script.google.com/macros/s/AKfycbwN0IDCZCRzmneSVCwCVQgpOkRytkrCetlPquToGV-BVug5C1aPG9o9hoUqWeLpVHP0/exec"
                         autocomplete="off" spellcheck="false" required>
                     <span style="display:block; font-size:11.5px; color:var(--text-dim); margin-top:6px; line-height:1.4;">
                         Must end with <code style="color:var(--yug-emerald-light);">/exec</code> and be deployed with access set to <em>"Anyone"</em>.
@@ -1703,11 +1703,42 @@ const HEADERS = [
   'Source'
 ];
 
+function onOpen() {
+  setupSheetNow();
+}
+
+function setupSheetNow() {
+  getOrCreateSheet();
+}
+
+function testAddSampleLead() {
+  const sheet = getOrCreateSheet();
+  const testId = 'LEAD_TEST_' + new Date().getTime();
+  const testTime = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a') + ' IST';
+  sheet.appendRow([
+    testId,
+    testTime,
+    'Sample Customer',
+    '9876543210',
+    '4 SIM IVR (Popular)',
+    'customer@example.com',
+    'New Lead',
+    'Testing Google Sheet connection from Apps Script',
+    'Setup Test'
+  ]);
+}
+
 function getOrCreateSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
+    const sheets = ss.getSheets();
+    if (sheets.length === 1 && sheets[0].getLastRow() === 0) {
+      sheet = sheets[0];
+      sheet.setName(SHEET_NAME);
+    } else {
+      sheet = ss.insertSheet(SHEET_NAME);
+    }
   }
   
   if (sheet.getLastRow() === 0) {
