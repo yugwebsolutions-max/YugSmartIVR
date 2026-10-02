@@ -240,25 +240,20 @@
             soundBtn.title = soundEnabled ? 'Sound On' : 'Sound Off';
         });
 
-        // Quick Auto-Open: Automatically opens the full chatbot window quickly on page load
+        // Auto-Open Behavior:
+        // - Mobile devices (<= 768px or mobile browsers): Auto-open is DISABLED completely.
+        // - Desktop devices (> 768px): Auto-open after 30 seconds if not already opened/interacted with.
         let autoOpenFired = false;
-        const triggerAutoOpen = () => {
-            if (!autoOpenFired && !isOpen) {
+        const triggerDesktopAutoOpen = () => {
+            const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+            if (!isMobile && !autoOpenFired && !isOpen && !hasInteracted) {
                 autoOpenFired = true;
                 toggleChat(true);
             }
         };
 
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTimeout(triggerAutoOpen, 800);
-        } else {
-            window.addEventListener('load', () => {
-                setTimeout(triggerAutoOpen, 800);
-            });
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(triggerAutoOpen, 1000);
-            });
-        }
+        // 30 seconds timer for desktop only
+        setTimeout(triggerDesktopAutoOpen, 30000);
 
         // Render Initial Welcome Message
         renderWelcomeMessage();
