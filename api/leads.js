@@ -27,12 +27,36 @@ const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const LOCAL_FILE = path.join(process.cwd(), 'leads.json');
 const TMP_FILE = path.join('/tmp', 'yug_leads.json');
+const GOOGLE_URL_FILE = path.join('/tmp', 'google_url.txt');
+
+// Active Google Apps Script Web App URL
+let activeGoogleScriptUrl = process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || '';
+try {
+    if (!activeGoogleScriptUrl && fs.existsSync(GOOGLE_URL_FILE)) {
+        activeGoogleScriptUrl = fs.readFileSync(GOOGLE_URL_FILE, 'utf8').trim();
+    }
+} catch (e) {}
 
 // In-Memory Warm Cache
 let memoryLeads = null;
 
-// Read leads from persistent storage
+// Read leads from persistent storage (Google Sheet primary, local/KV fallback)
 async function readLeads() {
+    // 0. Primary: Fetch from Google Apps Script Web App if configured
+    if (activeGoogleScriptUrl && activeGoogleScriptUrl.includes('script.google.com')) {
+        try {
+            const gRes = await fetch(activeGoogleScriptUrl + (activeGoogleScriptUrl.includes('?') ? '&' : '?') + 'action=get&_t=' + Date.now());
+            if (gRes.ok) {
+                const gData = await gRes.json();
+                if (gData && Array.isArray(gData.leads) && gData.leads.length > 0) {
+                    memoryLeads = gData.leads;
+                    return gData.leads;
+                }
+            }
+        } catch (e) {
+            console.warn('[CRM API] Google Sheet fetch note:', e.message);
+        }
+    }
     // 1. Try Upstash / Vercel KV if configured
     if (KV_URL && KV_TOKEN) {
         try {
@@ -351,6 +375,18 @@ module.exports = async function handler(req, res) {
 
         if (updatedLead) {
             await writeLeads(leads);
+
+            // Forward update to Google Sheet if active
+            if (activeGoogleScriptUrl && activeGoogleScriptUrl.includes('script.google.com')) {
+                try {
+                    fetch(activeGoogleScriptUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'update', id: leadId, status, notes })
+                    }).catch(() => {});
+                } catch (e) {}
+            }
+
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: true, lead: updatedLead }));
         } else {
@@ -384,8 +420,45 @@ module.exports = async function handler(req, res) {
         });
         await writeLeads(filtered);
 
+        // Forward deletion to Google Sheet if active
+        if (activeGoogleScriptUrl && activeGoogleScriptUrl.includes('script.google.com')) {
+            try {
+                fetch(activeGoogleScriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'delete', id: leadId, mobile: targetMobile })
+                }).catch(() => {});
+            } catch (e) {}
+        }
+
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: 'Lead deleted', total: filtered.length }));
+        return;
+    }
+
+    // ------------------------------------------------------------------------
+    // 7. POST /api/leads with action === 'save_google_url'
+    // ------------------------------------------------------------------------
+    if (req.method === 'POST' && action === 'save_google_url') {
+        const newUrl = String(body.url || '').trim();
+        if (newUrl && newUrl.includes('script.google.com')) {
+            activeGoogleScriptUrl = newUrl;
+            try { fs.writeFileSync(GOOGLE_URL_FILE, activeGoogleScriptUrl, 'utf8'); } catch (e) {}
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, googleScriptUrl: activeGoogleScriptUrl }));
+            return;
+        }
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Invalid Google Apps Script URL' }));
+        return;
+    }
+
+    // ------------------------------------------------------------------------
+    // 8. GET /api/leads with action === 'get_google_url'
+    // ------------------------------------------------------------------------
+    if (action === 'get_google_url') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, googleScriptUrl: activeGoogleScriptUrl }));
         return;
     }
 

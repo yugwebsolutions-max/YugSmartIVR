@@ -27,8 +27,43 @@ const CONFIG = {
     senderEmail: process.env.GMAIL_USER || 'yugwebsolutions@gmail.com',
     companyName: 'Yug Web Solutions',
     productName: 'Yug Smart IVR',
-    companyPhone: '+91 7387829461'
+    companyPhone: '+91 7387829461',
+    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || ''
 };
+
+// Dispatch lead to Google Sheet via Google Apps Script Web App
+async function dispatchToGoogleSheet(leadRecord, clientGoogleUrl) {
+    const targetUrl = clientGoogleUrl || CONFIG.googleScriptUrl;
+    if (!targetUrl || !targetUrl.includes('script.google.com')) return false;
+
+    try {
+        const response = await fetch(targetUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'add',
+                id: leadRecord.id,
+                timestamp: leadRecord.timestamp,
+                name: leadRecord.name,
+                customerName: leadRecord.name,
+                mobile: leadRecord.mobile,
+                customerMobileNumber: '+91 ' + leadRecord.mobile,
+                requirement: leadRecord.requirement,
+                email: leadRecord.email || 'Not Provided',
+                source: leadRecord.source || 'Website Form',
+                status: 'New Lead',
+                notes: ''
+            })
+        });
+        if (response.ok) {
+            console.log(`[GoogleSheet] Synced lead ${leadRecord.id} to Google Sheet`);
+            return true;
+        }
+    } catch (err) {
+        console.warn('[GoogleSheet] Forwarding notice:', err.message);
+    }
+    return false;
+}
 
 // Security: Input Sanitizer
 function sanitize(input) {
@@ -282,6 +317,9 @@ module.exports = async function handler(req, res) {
             status: 'New Lead',
             notes: ''
         };
+
+        // Simultaneously dispatch to Google Sheet via Google Apps Script Web App
+        dispatchToGoogleSheet(leadRecord, body.googleScriptUrl).catch(() => {});
 
         // Simultaneously persist to CRM lead store
         try {

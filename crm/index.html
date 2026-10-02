@@ -381,6 +381,33 @@
             color: #fca5a5;
         }
 
+        .btn-google-sync {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+        }
+
+        .btn-google-sync:hover {
+            background: rgba(16, 185, 129, 0.22);
+            border-color: #10b981;
+            color: #ffffff;
+        }
+
+        .google-sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #64748b;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .google-sync-dot.connected {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulseDot 2s infinite;
+        }
+
         /* ----------------------------------------------------
            3. DASHBOARD BODY & STAT CARDS
            ---------------------------------------------------- */
@@ -1016,6 +1043,169 @@
             cursor: pointer;
         }
 
+        .modal-card-lg {
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .sync-status-box {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+            border: 1px solid var(--border-subtle);
+            background: #0d1217;
+        }
+
+        .sync-status-box.connected {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+        }
+
+        .sync-status-box.disconnected {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .sync-status-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        .sync-status-box.connected .sync-status-badge {
+            background: #065f46;
+            color: #34d399;
+        }
+
+        .sync-status-box.disconnected .sync-status-badge {
+            background: #7f1d1d;
+            color: #f87171;
+        }
+
+        .sync-actions-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .sync-btn-test {
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: #e5e7eb;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sync-btn-test:hover {
+            background: #374151;
+            color: #ffffff;
+        }
+
+        .sync-btn-save {
+            background: var(--yug-emerald);
+            border: 1px solid var(--yug-emerald);
+            color: #ffffff;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.2s;
+        }
+
+        .sync-btn-save:hover {
+            background: var(--yug-emerald-light);
+            border-color: var(--yug-emerald-light);
+        }
+
+        .sync-setup-guide {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .sync-setup-guide summary {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .sync-setup-guide summary:hover {
+            color: #f1f5f9;
+        }
+
+        .guide-step {
+            background: #0d1217;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            font-size: 12.5px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .guide-step strong {
+            color: #ffffff;
+        }
+
+        .guide-code-box {
+            position: relative;
+            background: #090d12;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        .guide-code-box code {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #38bdf8;
+            word-break: break-all;
+        }
+
+        .btn-copy-script {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-copy-script:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+
         /* Toast Notifications */
         .crm-toast {
             position: fixed;
@@ -1153,6 +1343,10 @@
                 <div class="header-actions">
                     <button type="button" class="btn-action" onclick="fetchLeadsFromBackend(true)" title="Force Refresh">
                         <span id="refreshIcon">🔄</span> Refresh
+                    </button>
+                    <button type="button" class="btn-action btn-google-sync" id="googleSyncBtn" onclick="openGoogleSyncModal()" title="Google Sheet Cloud Database Sync">
+                        <span class="google-sync-dot" id="googleSyncDot"></span>
+                        <span id="googleSyncBtnText">Google Sheet</span>
                     </button>
                     <button type="button" class="btn-action btn-primary-action" onclick="openAddLeadModal()">
                         + Add Lead
@@ -1355,6 +1549,78 @@
         </div>
     </div>
 
+    <!-- ====================================================
+         GOOGLE SHEETS CLOUD SYNC MODAL
+         ==================================================== -->
+    <div class="modal-overlay" id="googleSyncModal">
+        <div class="modal-card modal-card-lg">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:24px;">📊</span>
+                    <div>
+                        <h3 style="margin:0; font-size:18px;">Google Sheets Cloud Database</h3>
+                        <p style="margin:2px 0 0; font-size:12px; color:var(--text-muted);">Real-time multi-browser cloud persistence</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="closeGoogleSyncModal()">&times;</button>
+            </div>
+
+            <!-- Status Banner -->
+            <div class="sync-status-box" id="syncStatusBox">
+                <div>
+                    <div style="font-weight:600; margin-bottom:2px;" id="syncStatusHeading">Checking Connection...</div>
+                    <div style="font-size:12px; color:var(--text-muted);" id="syncStatusDetail">Verifying Google Sheet Web App status</div>
+                </div>
+                <span class="sync-status-badge" id="syncStatusBadge">Checking</span>
+            </div>
+
+            <form onsubmit="handleSaveGoogleUrl(event)">
+                <div class="form-group">
+                    <label for="googleScriptUrlInput">Google Apps Script Web App URL *</label>
+                    <input type="url" id="googleScriptUrlInput" class="form-input" 
+                        placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                        autocomplete="off" spellcheck="false" required>
+                    <span style="display:block; font-size:11.5px; color:var(--text-dim); margin-top:6px; line-height:1.4;">
+                        Must end with <code style="color:var(--yug-emerald-light);">/exec</code> and be deployed with access set to <em>"Anyone"</em>.
+                    </span>
+                </div>
+
+                <div class="sync-actions-row">
+                    <button type="button" class="sync-btn-test" id="btnTestGoogle" onclick="testGoogleConnection()">
+                        ⚡ Test Connection
+                    </button>
+                    <button type="submit" class="sync-btn-save" id="btnSaveGoogle">
+                        💾 Save & Fetch Leads
+                    </button>
+                    <button type="button" class="sync-btn-test" id="btnDisconnectGoogle" onclick="disconnectGoogleSheet()" style="display:none; color:#f87171; border-color:rgba(239,68,68,0.3);">
+                        Disconnect
+                    </button>
+                </div>
+            </form>
+
+            <!-- 2-Minute Setup Guide -->
+            <details class="sync-setup-guide" id="syncSetupGuide">
+                <summary>📖 How to set up Google Sheet in 2 minutes (Click to expand)</summary>
+                <div class="guide-step">
+                    <strong>Step 1:</strong> Create a new Google Sheet at <a href="https://sheets.new" target="_blank" rel="noopener" style="color:var(--yug-emerald-light); text-decoration:underline;">sheets.new</a> named <em>"Yug Smart IVR Leads"</em>.
+                </div>
+                <div class="guide-step">
+                    <strong>Step 2:</strong> In the Sheet menu, click <strong>Extensions &gt; Apps Script</strong>. Delete any default code, paste the script below, and save.
+                    <div class="guide-code-box">
+                        <button type="button" class="btn-copy-script" onclick="copyAppsScriptCode(this)">📋 Copy Script</button>
+                        <code>Google Apps Script code ready (Click "Copy Script" above)</code>
+                    </div>
+                </div>
+                <div class="guide-step">
+                    <strong>Step 3:</strong> Click <strong>Deploy &gt; New deployment &gt; Web app</strong>.<br>
+                    • Execute as: <strong>Me</strong><br>
+                    • Who has access: <strong>Anyone</strong> (Crucial! Allows website &amp; CRM to sync)<br>
+                    Click <strong>Deploy</strong>, copy the Web App URL (ends with <code>/exec</code>), and paste it above!
+                </div>
+            </details>
+        </div>
+    </div>
+
     <!-- Global Floating Status Dropdown Menu (Fixed Position, Portaled to Body) -->
     <div class="global-floating-menu" id="globalStatusMenu">
         <div class="global-menu-header">Change Lead Status</div>
@@ -1401,6 +1667,282 @@
         <span id="toastMessage">Lead updated</span>
     </div>
 
+    <!-- Apps Script Template Source (Used for 1-click clipboard copy) -->
+    <script type="text/plain" id="googleAppsScriptSource">
+/**
+ * ============================================================================
+ * YUG SMART IVR - GOOGLE APPS SCRIPT CLOUD DATABASE & CRM SYNC ENGINE
+ * ============================================================================
+ * Author: Yug Web Solutions
+ * Version: 2.0.0
+ * 
+ * Instructions:
+ * 1. Open your Google Sheet (e.g. named "Yug Smart IVR Leads").
+ * 2. Click Extensions > Apps Script.
+ * 3. Delete any existing template code and paste this entire file.
+ * 4. Click the blue "Deploy" button (top right) > "New deployment".
+ * 5. Click the gear icon (Select type) > choose "Web app".
+ * 6. Set Description: "Yug Smart IVR Lead Engine"
+ * 7. Set "Execute as": "Me" (your Google account)
+ * 8. Set "Who has access": "Anyone" (Crucial! Allows website & CRM to sync).
+ * 9. Click "Deploy", approve permissions, and copy the Web App URL (ends with /exec).
+ * 10. Paste the Web App URL into your CRM Dashboard > "Google Sheet" settings!
+ * ============================================================================
+ */
+
+const SHEET_NAME = 'Leads';
+const HEADERS = [
+  'Lead ID',
+  'Date & Time (IST)',
+  'Customer Name',
+  'Mobile Number',
+  'Requirement',
+  'Customer Email',
+  'Status',
+  'Sales Notes',
+  'Source'
+];
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+  }
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+    const headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
+    headerRange.setBackground('#009640');
+    headerRange.setFontColor('#ffffff');
+    headerRange.setFontWeight('bold');
+    headerRange.setHorizontalAlignment('center');
+    headerRange.setVerticalAlignment('middle');
+    sheet.setRowHeight(1, 38);
+    sheet.setFrozenRows(1);
+    
+    sheet.setColumnWidth(1, 190);
+    sheet.setColumnWidth(2, 190);
+    sheet.setColumnWidth(3, 180);
+    sheet.setColumnWidth(4, 150);
+    sheet.setColumnWidth(5, 160);
+    sheet.setColumnWidth(6, 200);
+    sheet.setColumnWidth(7, 140);
+    sheet.setColumnWidth(8, 260);
+    sheet.setColumnWidth(9, 180);
+  }
+  return sheet;
+}
+
+function doGet(e) {
+  try {
+    const sheet = getOrCreateSheet();
+    const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'get';
+    
+    if (action === 'ping') {
+      return respondJson({
+        success: true,
+        message: 'Google Apps Script is connected successfully to Google Sheet!',
+        timestamp: new Date().toISOString()
+      }, e);
+    }
+    
+    const lastRow = sheet.getLastRow();
+    if (lastRow <= 1) {
+      return respondJson({ success: true, count: 0, leads: [] }, e);
+    }
+    
+    const numRows = lastRow - 1;
+    const values = sheet.getRange(2, 1, numRows, HEADERS.length).getValues();
+    const leads = [];
+    
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i];
+      const leadId = String(row[0] || '').trim();
+      const timestamp = String(row[1] || '').trim();
+      const name = String(row[2] || '').trim();
+      const mobileRaw = String(row[3] || '').trim();
+      const req = String(row[4] || 'IVR Solution').trim();
+      const email = String(row[5] || '').trim();
+      const status = String(row[6] || 'New Lead').trim();
+      const notes = String(row[7] || '').trim();
+      const source = String(row[8] || 'Website').trim();
+      
+      if (!leadId && !mobileRaw && !name) continue;
+      
+      const cleanMobile = mobileRaw.replace(/\D/g, '').slice(-10);
+      const formattedMobile = cleanMobile ? ('+91 ' + cleanMobile) : (mobileRaw || 'Not Provided');
+      
+      leads.push({
+        id: leadId || ('LEAD_' + (i + 1)),
+        timestamp: timestamp || '',
+        name: name || 'Customer',
+        customerName: name || 'Customer',
+        mobile: cleanMobile || mobileRaw,
+        customerMobileNumber: formattedMobile,
+        requirement: req || 'IVR Solution',
+        email: email || 'Not Provided',
+        status: status || 'New Lead',
+        notes: notes || '',
+        source: source || 'Website Form'
+      });
+    }
+    
+    leads.reverse();
+    
+    return respondJson({
+      success: true,
+      count: leads.length,
+      leads: leads
+    }, e);
+    
+  } catch (err) {
+    return respondJson({ success: false, error: err.toString() }, e);
+  }
+}
+
+function doPost(e) {
+  try {
+    const sheet = getOrCreateSheet();
+    let data = {};
+    
+    if (e && e.postData && e.postData.contents) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (pe) {
+        data = e.parameter || {};
+      }
+    } else if (e && e.parameter) {
+      data = e.parameter;
+    }
+    
+    const action = data.action || (e.parameter ? e.parameter.action : 'add');
+    
+    if (action === 'delete') {
+      const targetId = String(data.id || data.leadId || '').trim();
+      const targetMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
+      
+      const lastRow = sheet.getLastRow();
+      let deletedCount = 0;
+      
+      if (lastRow > 1) {
+        const values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+        for (let i = values.length - 1; i >= 0; i--) {
+          const rowId = String(values[i][0]).trim();
+          const rowMobile = String(values[i][3]).replace(/\D/g, '').slice(-10);
+          
+          let isMatch = false;
+          if (targetId && rowId && rowId === targetId) isMatch = true;
+          if (targetMobile && rowMobile && rowMobile === targetMobile) isMatch = true;
+          
+          if (isMatch) {
+            sheet.deleteRow(i + 2);
+            deletedCount++;
+          }
+        }
+      }
+      
+      return respondJson({ success: true, action: 'delete', deletedCount: deletedCount });
+    }
+    
+    if (action === 'update' || action === 'update_status') {
+      const targetId = String(data.id || data.leadId || '').trim();
+      const targetMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
+      const newStatus = data.status;
+      const newNotes = data.notes;
+      
+      const lastRow = sheet.getLastRow();
+      let isUpdated = false;
+      
+      if (lastRow > 1) {
+        const values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+        for (let i = 0; i < values.length; i++) {
+          const rowId = String(values[i][0]).trim();
+          const rowMobile = String(values[i][3]).replace(/\D/g, '').slice(-10);
+          
+          let isMatch = false;
+          if (targetId && rowId && rowId === targetId) isMatch = true;
+          if (!isMatch && targetMobile && rowMobile && rowMobile === targetMobile) isMatch = true;
+          
+          if (isMatch) {
+            const rowIndex = i + 2;
+            if (newStatus !== undefined && newStatus !== null) {
+              sheet.getRange(rowIndex, 7).setValue(String(newStatus));
+            }
+            if (newNotes !== undefined && newNotes !== null) {
+              sheet.getRange(rowIndex, 8).setValue(String(newNotes));
+            }
+            isUpdated = true;
+            break;
+          }
+        }
+      }
+      
+      return respondJson({ success: true, action: 'update', updated: isUpdated });
+    }
+    
+    const leadId = data.id || ('LEAD_' + new Date().getTime());
+    const timestamp = data.timestamp || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a') + ' IST';
+    const name = data.name || data.customerName || 'Customer';
+    const mobile = String(data.mobile || data.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+    const requirement = data.requirement || 'IVR Solution';
+    const email = data.email || 'Not Provided';
+    const status = data.status || 'New Lead';
+    const notes = data.notes || '';
+    const source = data.source || 'Website Form';
+    
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const checkCount = Math.min(lastRow - 1, 20);
+      const startCheckRow = lastRow - checkCount + 1;
+      const recentValues = sheet.getRange(startCheckRow, 1, checkCount, 4).getValues();
+      
+      for (let i = recentValues.length - 1; i >= 0; i--) {
+        const existingId = String(recentValues[i][0]).trim();
+        const existingMobile = String(recentValues[i][3]).replace(/\D/g, '').slice(-10);
+        
+        if (leadId && existingId && leadId === existingId) {
+          return respondJson({ success: true, action: 'add', duplicateIgnored: true, id: leadId });
+        }
+        if (mobile && existingMobile && mobile === existingMobile && mobile.length >= 10) {
+          return respondJson({ success: true, action: 'add', duplicateIgnored: true, id: existingId });
+        }
+      }
+    }
+    
+    sheet.appendRow([
+      leadId,
+      timestamp,
+      name,
+      mobile,
+      requirement,
+      email,
+      status,
+      notes,
+      source
+    ]);
+    
+    return respondJson({ success: true, action: 'add', id: leadId });
+    
+  } catch (err) {
+    return respondJson({ success: false, error: err.toString() });
+  }
+}
+
+function respondJson(obj, e) {
+  const jsonStr = JSON.stringify(obj);
+  
+  if (e && e.parameter && e.parameter.callback) {
+    const cb = e.parameter.callback;
+    return ContentService.createTextOutput(cb + '(' + jsonStr + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  
+  return ContentService.createTextOutput(jsonStr)
+    .setMimeType(ContentService.MimeType.JSON);
+}
+    </script>
+
     <!-- ====================================================
          4. CORE JAVASCRIPT LOGIC
          ==================================================== -->
@@ -1420,18 +1962,377 @@
         }
 
         // ----------------------------------------------------
+        // Google Apps Script Cloud Database Sync Helpers
+        // ----------------------------------------------------
+        function getGoogleScriptUrl() {
+            try {
+                const stored = localStorage.getItem('yug_google_script_url');
+                if (stored && stored.includes('script.google.com')) return stored.trim();
+            } catch (e) {}
+            if (window.YUG_GOOGLE_SCRIPT_URL && String(window.YUG_GOOGLE_SCRIPT_URL).includes('script.google.com')) {
+                return String(window.YUG_GOOGLE_SCRIPT_URL).trim();
+            }
+            return '';
+        }
+
+        function updateGoogleSyncIndicator(status = 'checking') {
+            const dot = document.getElementById('googleSyncDot');
+            const btnText = document.getElementById('googleSyncBtnText');
+            const url = getGoogleScriptUrl();
+
+            if (!url) {
+                if (dot) {
+                    dot.className = 'google-sync-dot';
+                    dot.style.background = '#64748b';
+                    dot.style.boxShadow = 'none';
+                }
+                if (btnText) btnText.textContent = 'Google Sheet';
+                return;
+            }
+
+            if (status === 'connected') {
+                if (dot) {
+                    dot.className = 'google-sync-dot connected';
+                    dot.style.background = '#10b981';
+                    dot.style.boxShadow = '0 0 10px #10b981';
+                }
+                if (btnText) btnText.textContent = 'Sheet Synced';
+            } else if (status === 'error') {
+                if (dot) {
+                    dot.className = 'google-sync-dot';
+                    dot.style.background = '#ef4444';
+                    dot.style.boxShadow = '0 0 8px #ef4444';
+                }
+                if (btnText) btnText.textContent = 'Sheet Error';
+            } else {
+                if (dot) {
+                    dot.className = 'google-sync-dot';
+                    dot.style.background = '#38bdf8';
+                    dot.style.boxShadow = '0 0 8px #38bdf8';
+                }
+                if (btnText) btnText.textContent = 'Connecting...';
+            }
+        }
+
+        // Dual-mode fetch: standard GET fetch with graceful JSONP fallback
+        async function fetchLeadsFromGoogleSheet(url) {
+            if (!url || !url.includes('script.google.com')) return null;
+
+            // 1. Try standard GET fetch
+            try {
+                const fetchUrl = url + (url.includes('?') ? '&' : '?') + 'action=get&_t=' + Date.now();
+                const res = await fetch(fetchUrl, { method: 'GET', cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success && Array.isArray(data.leads)) {
+                        return data.leads;
+                    }
+                }
+            } catch (fetchErr) {
+                console.warn('[CRM] Standard fetch to Google Script blocked or failed, attempting JSONP fallback...', fetchErr.message);
+            }
+
+            // 2. Resilient JSONP fallback (bypasses browser CORS & strict extension blocks)
+            return new Promise((resolve) => {
+                const callbackName = 'yugJsonp_' + Math.floor(Math.random() * 10000000);
+                let resolved = false;
+
+                const cleanup = () => {
+                    try { delete window[callbackName]; } catch (e) {}
+                    const el = document.getElementById(callbackName);
+                    if (el) el.remove();
+                };
+
+                const timeoutId = setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        cleanup();
+                        console.warn('[CRM] Google Script JSONP timed out after 8s');
+                        resolve(null);
+                    }
+                }, 8000);
+
+                window[callbackName] = function(data) {
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeoutId);
+                        cleanup();
+                        if (data && data.success && Array.isArray(data.leads)) {
+                            resolve(data.leads);
+                        } else {
+                            resolve(null);
+                        }
+                    }
+                };
+
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = url + (url.includes('?') ? '&' : '?') + 'action=get&callback=' + callbackName + '&_t=' + Date.now();
+                script.onerror = () => {
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeoutId);
+                        cleanup();
+                        resolve(null);
+                    }
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        // Fire-and-forget background synchronization to Google Sheet
+        function syncActionToGoogleSheet(action, payload) {
+            const url = getGoogleScriptUrl();
+            if (!url) return;
+
+            try {
+                fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action, ...payload })
+                }).catch(() => {});
+            } catch (e) {}
+        }
+
+        // Modal Controls
+        function openGoogleSyncModal() {
+            const modal = document.getElementById('googleSyncModal');
+            const input = document.getElementById('googleScriptUrlInput');
+            const currentUrl = getGoogleScriptUrl();
+
+            if (input) input.value = currentUrl;
+            updateSyncModalStatus();
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeGoogleSyncModal() {
+            const modal = document.getElementById('googleSyncModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function updateSyncModalStatus() {
+            const currentUrl = getGoogleScriptUrl();
+            const statusBox = document.getElementById('syncStatusBox');
+            const statusHeading = document.getElementById('syncStatusHeading');
+            const statusDetail = document.getElementById('syncStatusDetail');
+            const statusBadge = document.getElementById('syncStatusBadge');
+            const disconnectBtn = document.getElementById('btnDisconnectGoogle');
+
+            if (currentUrl) {
+                if (statusBox) statusBox.className = 'sync-status-box connected';
+                if (statusHeading) statusHeading.textContent = 'Google Sheet Connected';
+                if (statusDetail) statusDetail.textContent = 'Leads are automatically synchronizing with Google Sheet.';
+                if (statusBadge) statusBadge.textContent = 'Connected';
+                if (disconnectBtn) disconnectBtn.style.display = 'inline-block';
+            } else {
+                if (statusBox) statusBox.className = 'sync-status-box';
+                if (statusHeading) statusHeading.textContent = 'No Google Sheet Linked';
+                if (statusDetail) statusDetail.textContent = 'Paste your Google Apps Script Web App URL below to connect.';
+                if (statusBadge) statusBadge.textContent = 'Not Linked';
+                if (disconnectBtn) disconnectBtn.style.display = 'none';
+            }
+        }
+
+        async function testGoogleConnection() {
+            const input = document.getElementById('googleScriptUrlInput');
+            const btn = document.getElementById('btnTestGoogle');
+            const statusBox = document.getElementById('syncStatusBox');
+            const statusHeading = document.getElementById('syncStatusHeading');
+            const statusDetail = document.getElementById('syncStatusDetail');
+            const statusBadge = document.getElementById('syncStatusBadge');
+
+            const testUrl = (input ? input.value : '').trim();
+            if (!testUrl || !testUrl.includes('script.google.com')) {
+                alert('Please enter a valid Google Apps Script Web App URL ending with /exec.');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Testing...';
+            }
+
+            if (statusHeading) statusHeading.textContent = 'Testing Connection...';
+            if (statusDetail) statusDetail.textContent = 'Contacting Google Apps Script Web App...';
+            if (statusBadge) statusBadge.textContent = 'Testing';
+            if (statusBox) statusBox.className = 'sync-status-box';
+
+            const leads = await fetchLeadsFromGoogleSheet(testUrl);
+
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '⚡ Test Connection';
+            }
+
+            if (leads !== null) {
+                if (statusBox) statusBox.className = 'sync-status-box connected';
+                if (statusHeading) statusHeading.textContent = 'Connection Successful!';
+                if (statusDetail) statusDetail.textContent = `Google Sheet is active and returned ${leads.length} lead(s).`;
+                if (statusBadge) statusBadge.textContent = 'Active';
+                showToast(`Connected! Found ${leads.length} leads in Google Sheet`, '🟢');
+            } else {
+                if (statusBox) statusBox.className = 'sync-status-box disconnected';
+                if (statusHeading) statusHeading.textContent = 'Connection Failed';
+                if (statusDetail) statusDetail.textContent = 'Unable to reach Google Script. Check deployment settings ("Who has access: Anyone").';
+                if (statusBadge) statusBadge.textContent = 'Failed';
+                showToast('Connection failed. Check Google Script deployment settings', '❌');
+            }
+        }
+
+        async function handleSaveGoogleUrl(e) {
+            e.preventDefault();
+            const input = document.getElementById('googleScriptUrlInput');
+            const saveBtn = document.getElementById('btnSaveGoogle');
+            const newUrl = (input ? input.value : '').trim();
+
+            if (!newUrl || !newUrl.includes('script.google.com')) {
+                alert('Please enter a valid Google Apps Script Web App URL ending with /exec.');
+                return;
+            }
+
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Connecting...';
+            }
+
+            localStorage.setItem('yug_google_script_url', newUrl);
+            window.YUG_GOOGLE_SCRIPT_URL = newUrl;
+            updateGoogleSyncIndicator('checking');
+
+            // Also persist with serverless backend API
+            fetch(getApiUrl('/api/leads'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                },
+                body: JSON.stringify({ action: 'save_google_url', url: newUrl })
+            }).catch(() => {});
+
+            showToast('Google Sheet database connected!', '✅');
+
+            // Immediately fetch leads from Google Sheet and render
+            await fetchLeadsFromBackend(true);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save & Fetch Leads';
+            }
+
+            updateSyncModalStatus();
+            setTimeout(() => {
+                closeGoogleSyncModal();
+            }, 600);
+        }
+
+        function disconnectGoogleSheet() {
+            if (!confirm('Are you sure you want to disconnect Google Sheet?')) return;
+            localStorage.removeItem('yug_google_script_url');
+            delete window.YUG_GOOGLE_SCRIPT_URL;
+            const input = document.getElementById('googleScriptUrlInput');
+            if (input) input.value = '';
+
+            // Notify backend
+            fetch(getApiUrl('/api/leads'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                },
+                body: JSON.stringify({ action: 'save_google_url', url: '' })
+            }).catch(() => {});
+
+            updateGoogleSyncIndicator('disconnected');
+            updateSyncModalStatus();
+            showToast('Google Sheet disconnected', 'ℹ️');
+        }
+
+        function copyAppsScriptCode(btn) {
+            const sourceEl = document.getElementById('googleAppsScriptSource');
+            const code = sourceEl ? sourceEl.textContent : '';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const oldText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    showToast('Apps Script code copied to clipboard!', '📋');
+                    setTimeout(() => { btn.textContent = oldText; }, 2000);
+                }).catch(() => {
+                    fallbackCopy(code, btn);
+                });
+            } else {
+                fallbackCopy(code, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                const oldText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                showToast('Apps Script code copied to clipboard!', '📋');
+                setTimeout(() => { btn.textContent = oldText; }, 2000);
+            } catch (e) {
+                alert('Please copy manually from google-apps-script/Code.gs');
+            }
+            document.body.removeChild(ta);
+        }
+
+        // Automatic polling timer (runs every 25 seconds when logged in)
+        let autoPollTimer = null;
+        function startAutoPolling() {
+            if (autoPollTimer) clearInterval(autoPollTimer);
+            autoPollTimer = setInterval(() => {
+                if (activeAdminToken) {
+                    fetchLeadsFromBackend(false, true);
+                }
+            }, 25000);
+        }
+
+        function stopAutoPolling() {
+            if (autoPollTimer) {
+                clearInterval(autoPollTimer);
+                autoPollTimer = null;
+            }
+        }
+
+        // ----------------------------------------------------
         // Authentication & Session
         // ----------------------------------------------------
-        function checkExistingSession() {
+        async function checkExistingSession() {
             if (window.location.port === '5500' || window.location.port === '5501') {
                 const notice = document.getElementById('liveServerNotice');
                 if (notice) notice.style.display = 'block';
             }
+
+            // Sync Google Script URL from backend if not yet stored locally
+            if (!getGoogleScriptUrl()) {
+                try {
+                    const gRes = await fetch(getApiUrl('/api/leads?action=get_google_url'));
+                    if (gRes.ok) {
+                        const gData = await gRes.json();
+                        if (gData && gData.googleScriptUrl) {
+                            localStorage.setItem('yug_google_script_url', gData.googleScriptUrl);
+                            window.YUG_GOOGLE_SCRIPT_URL = gData.googleScriptUrl;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            updateGoogleSyncIndicator();
+
             const savedToken = sessionStorage.getItem('yug_crm_token') || localStorage.getItem('yug_crm_token');
             if (savedToken) {
                 activeAdminToken = savedToken;
                 showCrmApp();
                 fetchLeadsFromBackend();
+                startAutoPolling();
             } else {
                 showAuthView();
             }
@@ -1481,7 +2382,9 @@
                         localStorage.setItem('yug_crm_token', data.token);
                     }
                     showCrmApp();
+                    updateGoogleSyncIndicator();
                     fetchLeadsFromBackend();
+                    startAutoPolling();
                     showToast('🎉 Welcome to Yug Smart IVR CRM!', '✅');
                 } else {
                     // Fallback to local credential check if offline/static
@@ -1491,7 +2394,9 @@
                         sessionStorage.setItem('yug_crm_token', localTok);
                         if (rememberMe) localStorage.setItem('yug_crm_token', localTok);
                         showCrmApp();
+                        updateGoogleSyncIndicator();
                         fetchLeadsFromBackend();
+                        startAutoPolling();
                         showToast('🎉 Logged in successfully', '✅');
                     } else {
                         errorBox.textContent = data.error || 'Invalid username or password.';
@@ -1505,7 +2410,9 @@
                     activeAdminToken = localTok;
                     sessionStorage.setItem('yug_crm_token', localTok);
                     showCrmApp();
+                    updateGoogleSyncIndicator();
                     fetchLeadsFromBackend();
+                    startAutoPolling();
                 } else {
                     errorBox.textContent = 'Connection error. Please try again.';
                     errorBox.style.display = 'block';
@@ -1517,6 +2424,7 @@
         }
 
         function handleCrmLogout() {
+            stopAutoPolling();
             sessionStorage.removeItem('yug_crm_token');
             localStorage.removeItem('yug_crm_token');
             activeAdminToken = null;
@@ -1525,11 +2433,11 @@
         }
 
         // ----------------------------------------------------
-        // Real-Time Lead Fetching & Merging
+        // Real-Time Lead Fetching & Merging (Google Sheet + Serverless API + Local)
         // ----------------------------------------------------
-        async function fetchLeadsFromBackend(forceNotification = false) {
+        async function fetchLeadsFromBackend(forceNotification = false, isSilent = false) {
             const refreshIcon = document.getElementById('refreshIcon');
-            if (refreshIcon) refreshIcon.style.animation = 'spin 0.6s linear';
+            if (refreshIcon && !isSilent) refreshIcon.style.animation = 'spin 0.6s linear';
 
             // 1. Load local cache
             let localCache = [];
@@ -1541,31 +2449,68 @@
                 localCache = [...crmList, ...trackerList];
             } catch (e) {}
 
-            // 2. Fetch from backend API
-            try {
-                const res = await fetch(getApiUrl('/api/leads'), {
-                    headers: { 'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}` }
-                });
+            let sheetLeads = [];
+            let backendLeads = [];
+            let hasGoogleSync = false;
 
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && Array.isArray(data.leads)) {
-                        // Merge backend + localCache
-                        crmLeads = mergeLeads(data.leads, localCache);
-                        // Save merged to local cache
-                        localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
-                    }
-                } else {
-                    crmLeads = deduplicateLeads(localCache);
-                }
-            } catch (err) {
-                console.warn('[CRM] Backend fetch note, using local cache:', err);
-                crmLeads = deduplicateLeads(localCache);
+            const googleScriptUrl = getGoogleScriptUrl();
+
+            // 2. Concurrently fetch Google Sheet and Serverless Backend
+            const tasks = [];
+
+            if (googleScriptUrl) {
+                tasks.push(
+                    fetchLeadsFromGoogleSheet(googleScriptUrl)
+                        .then(leads => {
+                            if (Array.isArray(leads)) {
+                                sheetLeads = leads;
+                                hasGoogleSync = true;
+                                updateGoogleSyncIndicator('connected');
+                            } else {
+                                updateGoogleSyncIndicator('error');
+                            }
+                        })
+                        .catch(() => {
+                            updateGoogleSyncIndicator('error');
+                        })
+                );
+            } else {
+                updateGoogleSyncIndicator('disconnected');
             }
 
+            tasks.push(
+                fetch(getApiUrl('/api/leads'), {
+                    headers: { 'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}` }
+                })
+                .then(async res => {
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && Array.isArray(data.leads)) {
+                            backendLeads = data.leads;
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.warn('[CRM] Backend API fetch note:', err.message);
+                })
+            );
+
+            await Promise.allSettled(tasks);
+
+            // 3. Deduplicate and merge Google Sheet + Backend + Local Cache
+            crmLeads = deduplicateLeads([...sheetLeads, ...backendLeads, ...localCache]);
+
+            // Save merged list to local cache
+            try {
+                localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
+            } catch (e) {}
+
             renderDashboard();
-            if (forceNotification) showToast('Leads refreshed successfully', '🔄');
-            if (refreshIcon) setTimeout(() => { refreshIcon.style.animation = ''; }, 600);
+
+            if (forceNotification) {
+                showToast(hasGoogleSync ? `Synced with Google Sheet (${crmLeads.length} leads)` : 'Leads refreshed successfully', '🔄');
+            }
+            if (refreshIcon && !isSilent) setTimeout(() => { refreshIcon.style.animation = ''; }, 600);
         }
 
         function getDeletedLeadsSet() {
@@ -1981,6 +2926,9 @@
                 handleSearchFilter(); // Re-render table with updated status badge
                 showToast(`Status updated to "${newStatus}"`, '✓');
 
+                // Sync with Google Sheet Cloud
+                syncActionToGoogleSheet('update', { id: leadId, status: newStatus });
+
                 // Sync with backend API
                 fetch(getApiUrl('/api/leads'), {
                     method: 'POST',
@@ -1999,6 +2947,9 @@
                 lead.notes = notes;
                 localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
                 showToast('Sales notes saved', '💾');
+
+                // Sync with Google Sheet Cloud
+                syncActionToGoogleSheet('update', { id: leadId, notes });
 
                 // Sync with backend API
                 fetch(getApiUrl('/api/leads'), {
@@ -2054,7 +3005,10 @@
             renderDashboard();
             showToast('Lead record permanently deleted', '🗑');
 
-            // 5. Sync deletion with backend API
+            // 5. Sync deletion with Google Sheet Cloud
+            syncActionToGoogleSheet('delete', { id: leadId, mobile: targetMobile });
+
+            // 6. Sync deletion with backend API
             fetch(getApiUrl('/api/leads'), {
                 method: 'POST',
                 headers: {
@@ -2121,7 +3075,10 @@
             e.target.reset();
             selectModalReq('4 SIM IVR (Popular)');
 
-            // Sync with backend
+            // Sync with Google Sheet Cloud
+            syncActionToGoogleSheet('add', newLead);
+
+            // Sync with backend API
             fetch(getApiUrl('/api/leads'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

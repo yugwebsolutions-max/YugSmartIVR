@@ -23,8 +23,26 @@
         formSubmitEndpoint: 'https://formsubmit.co/ajax/f40be870712b3641a8926657ccfe7d90',
         directFormSubmitUrl: 'https://formsubmit.co/f40be870712b3641a8926657ccfe7d90',
         localNodeEndpoint: 'http://localhost:3000/api/leads',
-        storageKey: 'yug_leads_tracker'
+        storageKey: 'yug_leads_tracker',
+        googleScriptUrl: '' // Auto-loaded from localStorage or window.YUG_GOOGLE_SCRIPT_URL
     };
+
+    /**
+     * Retrieve configured Google Apps Script Web App URL
+     */
+    function getGoogleScriptUrl() {
+        try {
+            const stored = localStorage.getItem('yug_google_script_url');
+            if (stored && stored.includes('script.google.com')) return stored.trim();
+        } catch (e) {}
+        if (window.YUG_GOOGLE_SCRIPT_URL && String(window.YUG_GOOGLE_SCRIPT_URL).includes('script.google.com')) {
+            return String(window.YUG_GOOGLE_SCRIPT_URL).trim();
+        }
+        if (LEAD_CONFIG.googleScriptUrl && LEAD_CONFIG.googleScriptUrl.includes('script.google.com')) {
+            return LEAD_CONFIG.googleScriptUrl.trim();
+        }
+        return '';
+    }
 
     /**
      * Format current timestamp in Indian Standard Time (IST)
@@ -155,6 +173,32 @@
             timestamp: timestamp
         });
 
+        // 2.5. Dispatch to Google Apps Script Web App (Permanent Google Sheet Cloud Store)
+        const googleScriptUrl = getGoogleScriptUrl();
+        if (googleScriptUrl) {
+            try {
+                fetch(googleScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'add',
+                        id: persistentLeadId,
+                        timestamp: timestamp,
+                        name: cleanName,
+                        customerName: cleanName,
+                        mobile: cleanMobile,
+                        customerMobileNumber: '+91 ' + cleanMobile,
+                        requirement: cleanReq,
+                        email: cleanEmail || 'Not Provided',
+                        source: cleanSource,
+                        status: 'New Lead',
+                        notes: ''
+                    })
+                }).catch(err => console.warn('[LeadService] Google Sheet post notice:', err));
+            } catch (ge) {}
+        }
+
         // 3. Dispatch to Clean Vercel Serverless Function (/api/send-lead) - Zero Ads
         const vercelPayload = {
             id: persistentLeadId,
@@ -163,7 +207,8 @@
             email: cleanEmail,
             requirement: cleanReq,
             source: cleanSource,
-            timestamp: timestamp
+            timestamp: timestamp,
+            googleScriptUrl: googleScriptUrl
         };
 
         const dispatchPromise = (async () => {
