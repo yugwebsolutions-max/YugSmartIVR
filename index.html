@@ -85,6 +85,31 @@
     <!-- Drawer Backdrop Overlay -->
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
+    <!-- Top Trust Bar with Official GSTIN & Direct Contact -->
+    <div class="top-trust-bar">
+        <div class="top-trust-container">
+            <div class="top-trust-left">
+                <span class="gst-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    GSTIN: <strong class="gst-num">27GBYPS3304G1Z4</strong>
+                </span>
+                <span class="top-trust-divider">•</span>
+                <span class="top-trust-text top-trust-text-long">Govt. Registered Enterprise • Yug Web Solutions</span>
+            </div>
+            <div class="top-trust-right">
+                <a href="tel:+917387829461" class="top-trust-link">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>Sales: +91 7387829461</span>
+                </a>
+                <span class="top-trust-divider">•</span>
+                <a href="mailto:yugwebsolutions@gmail.com" class="top-trust-link">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>yugwebsolutions@gmail.com</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================
          HEADER & NAVIGATION
          ======================================== -->
@@ -110,6 +135,12 @@
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                     </svg>
                     <span>+91 7387829461</span>
+                </a>
+                <a href="tel:+917387829461" class="header-mobile-call" aria-label="Call Sales Now">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span>Call Sales</span>
                 </a>
                 <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Navigation Menu">
                     <span class="hamburger-bar"></span>
@@ -149,6 +180,10 @@
                 </svg>
                 <span>Call: +91 7387829461</span>
             </a>
+            <div class="drawer-gst-box">
+                <span>Official Entity: <strong>Yug Web Solutions</strong></span>
+                <span>GSTIN: <strong>27GBYPS3304G1Z4</strong></span>
+            </div>
         </div>
     </div>
 
@@ -1222,6 +1257,7 @@
                             Zero Monthly Fees
                         </span>
                     </div>
+                    <p class="footer-gst">🏛️ GSTIN: <strong>27GBYPS3304G1Z4</strong> (Govt. of India Registered Enterprise)</p>
                 </div>
 
                 <!-- Column 2: Organized Navigation Grid (2-Column on Mobile) -->
@@ -1278,7 +1314,7 @@
                 <div class="footer-bottom-inner">
                     <p class="footer-copy-text">&copy; <span class="dynamic-year">2026</span> <strong>Yug Smart IVR</strong>. All Rights Reserved. Engineered by Yug Web Solutions.</p>
                     <div class="footer-legal-links">
-                        <a href="#" id="openPrivacyModal" class="footer-privacy-btn">Read Our Privacy Policy</a>
+                        <a href="privacy-policy.html" class="footer-privacy-btn">Privacy Policy</a>
                         <span class="legal-sep">•</span>
                         <a href="#faq" class="footer-legal-anchor">Help & FAQs</a>
                         <span class="legal-sep">•</span>
@@ -1288,22 +1324,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- ========================================
-         PRIVACY POLICY MODAL
-         ======================================== -->
-    <div id="privacyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
-        <div class="modal-content">
-            <span class="close-btn" aria-label="Close Modal">&times;</span>
-            <h2 id="privacyTitle">Privacy Policy</h2>
-            <div class="modal-text">
-                <p>The use of our website is subject to the following terms and conditions of use, as amended from time to time (the “Terms''). The Terms are to be read together by you with any terms, conditions or disclaimers provided in the pages of our website. Please review the Terms carefully. The Terms apply to all users of our website, including without limitation, users who are browsers, customers, merchants, vendors and/or contributors of content. If you access and use this website, you accept and agree to be bound by and comply with the Terms and our Privacy Policy. If you do not agree to the Terms or our Privacy Policy, you are not authorized to access our website, use any of our website’s services or place an order on our website.</p>
-                <p>You agree to use our website for legitimate purposes and not for any illegal or unauthorized purpose, including without limitation, in violation of any intellectual property or privacy law. By agreeing to the Terms, you represent and warrant that you are at least the age of majority in your state or province of residence and are legally capable of entering into a binding contract.</p>
-                <p>You agree to not use our website to conduct any activity that would constitute a civil or criminal offense or violate any law. You agree not to attempt to interfere with our website’s network or security features or to gain unauthorized access to our systems.</p>
-                <p>You agree to provide us with accurate personal information, such as your email address, mailing address and other contact details in order to complete your order or contact you as needed. You agree to promptly update your account and information. You authorize us to collect and use this information to contact you in accordance with our Privacy Policy.</p>
-            </div>
-        </div>
-    </div>
 
     <!-- Floating WhatsApp Trigger -->
     <a href="https://wa.me/917387829461?text=Hi%2C%20I%20am%20interested%20in%20Yug%20Smart%20IVR%20solutions." target="_blank" rel="noopener" class="floating-wa-btn" title="Chat on WhatsApp" aria-label="WhatsApp Contact">
@@ -1648,41 +1668,8 @@
             });
         });
 
-        // ----------------------------------------------------
-        // 8. Privacy Policy Modal Logic
-        // ----------------------------------------------------
-        const modal = document.getElementById("privacyModal");
-        const btn = document.getElementById("openPrivacyModal");
-        const span = document.getElementsByClassName("close-btn")[0];
-
-        if (btn && modal) {
-            btn.onclick = function(e) {
-                e.preventDefault();
-                modal.style.display = "flex";
-                setTimeout(() => {
-                    modal.classList.add("show");
-                }, 10);
-            }
-
-            span.onclick = function() {
-                modal.classList.remove("show");
-                setTimeout(() => {
-                    modal.style.display = "none";
-                }, 300);
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.classList.remove("show");
-                    setTimeout(() => {
-                        modal.style.display = "none";
-                    }, 300);
-                }
-            }
-        }
-
         // ====================================================
-        // 9. Hardware 360° & Multi-Angle Dataset
+        // 8. Hardware 360° & Multi-Angle Dataset
         // ====================================================
         const hardwareModelsData = {
             '1-sim': {
