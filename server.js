@@ -60,7 +60,7 @@ const server = http.createServer((req, res) => {
         const requirement = lead.requirement || 'IVR Solution';
         const email = lead.email || 'Not Provided';
         const timestamp = lead.timestamp || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST';
-        const directCall = '+91 7387829461';
+        const directCall = '+91 9158308156';
 
         return `<!DOCTYPE html>
 <html lang="en">
@@ -158,7 +158,7 @@ const server = http.createServer((req, res) => {
                             📞 Direct Call (Company)
                         </td>
                         <td style="padding:14px 18px; font-size:14px; font-weight:700; color:#111827; border-bottom:1px solid #e5e7eb;">
-                            <a href="tel:+917387829461" style="color:#009640; text-decoration:none;">
+                            <a href="tel:+919158308156" style="color:#009640; text-decoration:none;">
                                 ${directCall}
                             </a>
                         </td>
@@ -193,7 +193,7 @@ const server = http.createServer((req, res) => {
                     Yug Smart IVR | Yug Web Solutions
                 </p>
                 <p style="margin:0; font-size:11px; color:#9ca3af;">
-                    Sales & Support: <a href="tel:+917387829461" style="color:#009640; text-decoration:none; font-weight:600;">+91 7387829461</a> &bull;
+                    Sales & Support: <a href="tel:+919158308156" style="color:#009640; text-decoration:none; font-weight:600;">+91 9158308156</a> &bull;
                     <a href="mailto:yugwebsolutions@gmail.com" style="color:#6b7280; text-decoration:none;">yugwebsolutions@gmail.com</a>
                 </p>
             </td>

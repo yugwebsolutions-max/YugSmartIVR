@@ -263,7 +263,7 @@ module.exports = async function handler(req, res) {
             source: lead.source || 'Website Form',
             status: 'New Lead',
             notes: lead.notes || '',
-            directCall: '+91 7387829461'
+            directCall: '+91 9158308156'
         };
 
         const existingLeads = await readLeads();
@@ -355,17 +355,23 @@ module.exports = async function handler(req, res) {
     // 5. POST /api/leads with action === 'update_status'
     // ------------------------------------------------------------------------
     if (req.method === 'POST' && action === 'update_status') {
-        const { leadId, status, notes } = body;
-        if (!leadId) {
+        const { leadId, mobile, status, notes } = body;
+        if (!leadId && !mobile) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'leadId is required' }));
+            res.end(JSON.stringify({ success: false, error: 'leadId or mobile is required' }));
             return;
         }
 
+        const targetMobile = String(mobile || '').replace(/\D/g, '').slice(-10);
         const leads = await readLeads();
         let updatedLead = null;
         for (let i = 0; i < leads.length; i++) {
-            if (leads[i].id === leadId) {
+            const itemMobile = String(leads[i].mobile || leads[i].customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+            let isMatch = false;
+            if (leadId && leads[i].id === leadId) isMatch = true;
+            if (!isMatch && targetMobile && itemMobile && itemMobile === targetMobile) isMatch = true;
+
+            if (isMatch) {
                 if (status) leads[i].status = status;
                 if (typeof notes === 'string') leads[i].notes = notes;
                 updatedLead = leads[i];
@@ -382,7 +388,7 @@ module.exports = async function handler(req, res) {
                     fetch(activeGoogleScriptUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'update', id: leadId, status, notes })
+                        body: JSON.stringify({ action: 'update', id: leadId, mobile: targetMobile, status, notes })
                     }).catch(() => {});
                 } catch (e) {}
             }

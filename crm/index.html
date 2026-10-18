@@ -767,6 +767,16 @@
             box-shadow: 0 0 8px #fbbf24;
         }
 
+        .status-pill-not-received {
+            background: rgba(249, 115, 22, 0.14);
+            color: #fb923c;
+            border-color: rgba(249, 115, 22, 0.4);
+        }
+        .status-pill-not-received .status-dot {
+            background: #f97316;
+            box-shadow: 0 0 8px #f97316;
+        }
+
         .status-pill-discussion {
             background: rgba(192, 132, 252, 0.12);
             color: #c084fc;
@@ -795,6 +805,59 @@
         .status-pill-closed .status-dot {
             background: #f87171;
             box-shadow: 0 0 8px #f87171;
+        }
+
+        /* Source Badges */
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.25;
+            white-space: nowrap;
+            border: 1px solid transparent;
+            cursor: help;
+            transition: all 0.2s ease;
+            max-width: 145px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .source-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .badge-google-ads {
+            background: rgba(59, 130, 246, 0.14);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+        .badge-meta-ads {
+            background: rgba(168, 85, 247, 0.14);
+            color: #c084fc;
+            border-color: rgba(168, 85, 247, 0.35);
+        }
+        .badge-chatbot {
+            background: rgba(20, 184, 166, 0.14);
+            color: #2dd4bf;
+            border-color: rgba(20, 184, 166, 0.35);
+        }
+        .badge-website {
+            background: rgba(16, 185, 129, 0.14);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        .badge-manual {
+            background: rgba(245, 158, 11, 0.14);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.35);
+        }
+        .badge-test {
+            background: rgba(148, 163, 184, 0.14);
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.35);
         }
 
         /* Global Floating Dropdown Menu (Fixed position, never clipped) */
@@ -1430,6 +1493,7 @@
                             <option value="ALL">All Statuses</option>
                             <option value="New Lead">🟢 New Lead</option>
                             <option value="Contacted">🟡 Contacted</option>
+                            <option value="Call Not Received">📞 Call Not Received</option>
                             <option value="In Discussion">🟣 In Discussion</option>
                             <option value="Converted">🏆 Converted</option>
                             <option value="Closed / Lost">🔴 Closed / Lost</option>
@@ -1639,6 +1703,13 @@
             <div class="global-item-left">
                 <span class="status-dot" style="background:#fbbf24; box-shadow:0 0 8px #fbbf24;"></span>
                 <span>Contacted</span>
+            </div>
+            <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="global-menu-item" data-status="Call Not Received" onclick="handleSelectStatus('Call Not Received')">
+            <div class="global-item-left">
+                <span class="status-dot" style="background:#f97316; box-shadow:0 0 8px #f97316;"></span>
+                <span>Call Not Received</span>
             </div>
             <svg class="item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
@@ -2541,7 +2612,12 @@ function respondJson(obj, e) {
                 localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
             } catch (e) {}
 
-            renderDashboard();
+            // Prevent background auto-poll from interrupting sales rep while typing in a note field
+            const activeEl = document.activeElement;
+            const isTypingNote = activeEl && activeEl.classList && activeEl.classList.contains('notes-input');
+            if (!isSilent || !isTypingNote) {
+                renderDashboard();
+            }
 
             // When new leads arrive automatically from Google Sheet during background poll
             if (!isInitialLoad && crmLeads.length > previousCount) {
@@ -2605,6 +2681,67 @@ function respondJson(obj, e) {
             return false;
         }
 
+        // ----------------------------------------------------
+        // Persistent Local Note & Status Store (Zero-Data-Loss Shield)
+        // ----------------------------------------------------
+        function getPersistentNotesMap() {
+            try {
+                const raw = localStorage.getItem('yug_persistent_notes');
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function setPersistentNote(leadId, mobile, notes) {
+            try {
+                const map = getPersistentNotesMap();
+                if (leadId) map[leadId] = notes;
+                const cleanMob = String(mobile || '').replace(/\D/g, '').slice(-10);
+                if (cleanMob) map['mob_' + cleanMob] = notes;
+                localStorage.setItem('yug_persistent_notes', JSON.stringify(map));
+            } catch (e) {}
+        }
+
+        function getPersistentNote(leadId, mobile) {
+            try {
+                const map = getPersistentNotesMap();
+                if (leadId && map[leadId] !== undefined && map[leadId] !== '') return map[leadId];
+                const cleanMob = String(mobile || '').replace(/\D/g, '').slice(-10);
+                if (cleanMob && map['mob_' + cleanMob] !== undefined && map['mob_' + cleanMob] !== '') return map['mob_' + cleanMob];
+            } catch (e) {}
+            return '';
+        }
+
+        function getPersistentStatusMap() {
+            try {
+                const raw = localStorage.getItem('yug_persistent_status');
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function setPersistentStatus(leadId, mobile, status) {
+            try {
+                const map = getPersistentStatusMap();
+                if (leadId) map[leadId] = status;
+                const cleanMob = String(mobile || '').replace(/\D/g, '').slice(-10);
+                if (cleanMob) map['mob_' + cleanMob] = status;
+                localStorage.setItem('yug_persistent_status', JSON.stringify(map));
+            } catch (e) {}
+        }
+
+        function getPersistentStatus(leadId, mobile) {
+            try {
+                const map = getPersistentStatusMap();
+                if (leadId && map[leadId]) return map[leadId];
+                const cleanMob = String(mobile || '').replace(/\D/g, '').slice(-10);
+                if (cleanMob && map['mob_' + cleanMob]) return map['mob_' + cleanMob];
+            } catch (e) {}
+            return '';
+        }
+
         function deduplicateLeads(list) {
             if (!Array.isArray(list)) return [];
             
@@ -2618,15 +2755,43 @@ function respondJson(obj, e) {
                 return idB - idA;
             });
 
-            // 3. Smart Deduplication: deduplicate identical phone submissions
+            // 3. Smart Deduplication: deduplicate identical phone submissions and preserve status/notes
             const deduplicated = [];
             const seenIds = new Set();
 
             for (const item of sorted) {
                 const itemId = item.id;
-                if (itemId && seenIds.has(itemId)) continue;
-
                 const itemMobile = String(item.mobile || item.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+
+                // Preserve & restore notes & status from local persistent map
+                const pNote = getPersistentNote(itemId, itemMobile);
+                if (pNote && !item.notes) {
+                    item.notes = pNote;
+                } else if (item.notes) {
+                    setPersistentNote(itemId, itemMobile, item.notes);
+                }
+
+                const pStatus = getPersistentStatus(itemId, itemMobile);
+                if (pStatus && (!item.status || item.status === 'New Lead')) {
+                    item.status = pStatus;
+                } else if (item.status && item.status !== 'New Lead') {
+                    setPersistentStatus(itemId, itemMobile, item.status);
+                }
+
+                if (itemId && seenIds.has(itemId)) {
+                    // Item with same ID already in deduplicated: merge notes & status so they are never lost!
+                    const existingWithId = deduplicated.find(d => d.id === itemId);
+                    if (existingWithId) {
+                        if (!existingWithId.notes && item.notes) {
+                            existingWithId.notes = item.notes;
+                        }
+                        if ((!existingWithId.status || existingWithId.status === 'New Lead') && item.status && item.status !== 'New Lead') {
+                            existingWithId.status = item.status;
+                        }
+                    }
+                    continue;
+                }
+
                 const itemTimeMs = parseInt(String(item.id || '').replace(/\D/g, '')) || 0;
                 const itemReq = String(item.requirement || '').toLowerCase().trim();
                 const itemDateStr = String(item.timestamp || '').slice(0, 11).trim();
@@ -2678,6 +2843,61 @@ function respondJson(obj, e) {
         function mergeLeads(backendList, localList) {
             const combined = [...(Array.isArray(backendList) ? backendList : []), ...(Array.isArray(localList) ? localList : [])];
             return deduplicateLeads(combined);
+        }
+
+        // ----------------------------------------------------
+        // Modern Source Badge Renderer (Shortens URL to clean badge & keeps full source in tooltip)
+        // ----------------------------------------------------
+        function renderSourceBadge(rawSource) {
+            if (!rawSource) {
+                return '<span class="source-badge badge-website" title="Website Form">🌐 Website Form</span>';
+            }
+            const raw = String(rawSource).trim();
+            const low = raw.toLowerCase();
+
+            // Google Ads (gad_source, gclid, gbraid, wbraid, google ads, cpc, adwords)
+            if (low.includes('gad_source') || low.includes('gclid') || low.includes('gbraid') || low.includes('wbraid') || low.includes('google ads') || low.includes('google-ads') || low.includes('utm_source=google') || low.includes('cpc') || low.includes('adwords')) {
+                return `<span class="source-badge badge-google-ads" title="${escapeHtml(raw)}">🎯 Google Ads</span>`;
+            }
+
+            // Meta Ads (Facebook / Instagram)
+            if (low.includes('fbclid') || low.includes('meta') || low.includes('facebook') || low.includes('instagram') || low.includes('ig_') || low.includes('utm_source=meta') || low.includes('utm_source=facebook')) {
+                return `<span class="source-badge badge-meta-ads" title="${escapeHtml(raw)}">📱 Meta Ads</span>`;
+            }
+
+            // Chatbot
+            if (low.includes('chatbot') || low.includes('bot') || low.includes('ai assistant')) {
+                return `<span class="source-badge badge-chatbot" title="${escapeHtml(raw)}">🤖 Chatbot</span>`;
+            }
+
+            // Manual Entry
+            if (low.includes('manual')) {
+                return `<span class="source-badge badge-manual" title="${escapeHtml(raw)}">✍️ Manual</span>`;
+            }
+
+            // Test
+            if (low.includes('test')) {
+                return `<span class="source-badge badge-test" title="${escapeHtml(raw)}">🧪 Test Lead</span>`;
+            }
+
+            // Generic URL
+            if (raw.startsWith('http://') || raw.startsWith('https://')) {
+                try {
+                    const u = new URL(raw);
+                    const host = u.hostname.replace(/^www\./, '');
+                    return `<span class="source-badge badge-website" title="${escapeHtml(raw)}">🌐 ${escapeHtml(host)}</span>`;
+                } catch (e) {
+                    return `<span class="source-badge badge-website" title="${escapeHtml(raw)}">🌐 Website</span>`;
+                }
+            }
+
+            // Standard label
+            if (raw.length <= 22) {
+                return `<span class="source-badge badge-website" title="${escapeHtml(raw)}">🌐 ${escapeHtml(raw)}</span>`;
+            }
+
+            const truncated = raw.slice(0, 19) + '...';
+            return `<span class="source-badge badge-website" title="${escapeHtml(raw)}">🌐 ${escapeHtml(truncated)}</span>`;
         }
 
         // ----------------------------------------------------
@@ -2827,7 +3047,7 @@ function respondJson(obj, e) {
                             ${email ? `<a href="mailto:${email}" style="color:#38bdf8; text-decoration:none;">${email}</a>` : '<span style="color:#64748b;">Not Provided</span>'}
                         </td>
                         <td>
-                            <span style="font-size:11px; color:#94a3b8;">${source}</span>
+                            ${renderSourceBadge(l.source)}
                         </td>
                         <td>
                             <div class="custom-status-trigger ${getStatusClass(status)}" onclick="openStatusDropdown(event, '${leadId}')" id="statusTrigger_${leadId}" title="Click to change status" role="button" tabindex="0">
@@ -2839,7 +3059,7 @@ function respondJson(obj, e) {
                             </div>
                         </td>
                         <td>
-                            <input type="text" class="notes-input" value="${notes}" placeholder="Add note & press Enter..." onblur="updateLeadNotes('${leadId}', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
+                            <input type="text" class="notes-input" value="${notes}" placeholder="Add note & press Enter..." onchange="updateLeadNotes('${leadId}', this.value)" onblur="updateLeadNotes('${leadId}', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
                         </td>
                         <td style="text-align:center;">
                             <button type="button" class="btn-delete-row" onclick="deleteLeadRecord('${leadId}')" title="Delete lead">&times;</button>
@@ -2855,6 +3075,7 @@ function respondJson(obj, e) {
             switch(status) {
                 case 'New Lead': return 'status-pill-new';
                 case 'Contacted': return 'status-pill-contacted';
+                case 'Call Not Received': return 'status-pill-not-received';
                 case 'In Discussion': return 'status-pill-discussion';
                 case 'Converted': return 'status-pill-converted';
                 case 'Closed / Lost': return 'status-pill-closed';
@@ -2901,7 +3122,7 @@ function respondJson(obj, e) {
             menu.style.display = 'block';
             const rect = trigger.getBoundingClientRect();
             const menuWidth = 190;
-            const menuHeight = 220;
+            const menuHeight = 265;
 
             let top = rect.bottom + 6;
             let left = rect.left;
@@ -2986,13 +3207,15 @@ function respondJson(obj, e) {
             const lead = crmLeads.find(l => l.id === leadId);
             if (lead) {
                 lead.status = newStatus;
+                const cleanMobile = String(lead.mobile || lead.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+                setPersistentStatus(leadId, cleanMobile, newStatus);
                 localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
                 updateStatsCards();
                 handleSearchFilter(); // Re-render table with updated status badge
                 showToast(`Status updated to "${newStatus}"`, '✓');
 
-                // Sync with Google Sheet Cloud
-                syncActionToGoogleSheet('update', { id: leadId, status: newStatus });
+                // Sync with Google Sheet Cloud (both id and mobile for foolproof matching)
+                syncActionToGoogleSheet('update', { id: leadId, mobile: cleanMobile, status: newStatus });
 
                 // Sync with backend API
                 fetch(getApiUrl('/api/leads'), {
@@ -3001,20 +3224,30 @@ function respondJson(obj, e) {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
                     },
-                    body: JSON.stringify({ action: 'update_status', leadId, status: newStatus })
+                    body: JSON.stringify({ action: 'update_status', leadId, mobile: cleanMobile, status: newStatus })
                 }).catch(() => {});
             }
         }
 
         async function updateLeadNotes(leadId, notes) {
             const lead = crmLeads.find(l => l.id === leadId);
-            if (lead && lead.notes !== notes) {
-                lead.notes = notes;
+            if (lead) {
+                const trimmedNotes = String(notes || '').trim();
+                const cleanMobile = String(lead.mobile || lead.customerMobileNumber || '').replace(/\D/g, '').slice(-10);
+
+                // If identical to current in-memory and persistent store, skip redundant update
+                const currentPersistent = getPersistentNote(leadId, cleanMobile);
+                if (lead.notes === trimmedNotes && currentPersistent === trimmedNotes) {
+                    return;
+                }
+
+                lead.notes = trimmedNotes;
+                setPersistentNote(leadId, cleanMobile, trimmedNotes);
                 localStorage.setItem('yug_crm_leads', JSON.stringify(crmLeads));
                 showToast('Sales notes saved', '💾');
 
-                // Sync with Google Sheet Cloud
-                syncActionToGoogleSheet('update', { id: leadId, notes });
+                // Sync with Google Sheet Cloud (both id and mobile for foolproof matching)
+                syncActionToGoogleSheet('update', { id: leadId, mobile: cleanMobile, notes: trimmedNotes });
 
                 // Sync with backend API
                 fetch(getApiUrl('/api/leads'), {
@@ -3023,7 +3256,7 @@ function respondJson(obj, e) {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
                     },
-                    body: JSON.stringify({ action: 'update_status', leadId, notes })
+                    body: JSON.stringify({ action: 'update_status', leadId, mobile: cleanMobile, notes: trimmedNotes })
                 }).catch(() => {});
             }
         }

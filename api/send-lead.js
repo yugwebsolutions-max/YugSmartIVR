@@ -27,8 +27,8 @@ const CONFIG = {
     senderEmail: process.env.GMAIL_USER || 'yugwebsolutions@gmail.com',
     companyName: 'Yug Web Solutions',
     productName: 'Yug Smart IVR',
-    companyPhone: '+91 7387829461',
-    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycby1ROaHrPLEVJnHqpfaETdG2Ef9FVDtiQTmrTs5UE5vBxs9ORNXp2UV3PJZVEN0oNK4/exec'
+    companyPhone: '+91 9158308156',
+    googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || process.env.GOOGLE_SHEET_APP_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbw5FdgUFI59hyCRbbJeemq21blOcD4FpN4IPW3g3BOC5zxn8kckAX-Yv7DgyX2l8DLY/exec'
 };
 
 // Dispatch lead to Google Sheet via Google Apps Script Web App

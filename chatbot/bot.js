@@ -537,10 +537,10 @@
                         <h4>🎉 Thank You, ${escapeHtml(cleanName)}!</h4>
                         <p>Your enquiry for <strong>${escapeHtml(cleanReq)}</strong> has been received! Our telecom specialist will connect with you on <strong>+91 ${mobileVal}</strong> shortly.</p>
                         <div class="yug-bot-success-actions">
-                            <a href="tel:+917387829461" class="yug-bot-action-btn yug-bot-call-btn">
+                            <a href="tel:+919158308156" class="yug-bot-action-btn yug-bot-call-btn">
                                 📞 Call Specialist
                             </a>
-                            <a href="https://wa.me/917387829461?text=Hi%2C%20I%20just%20submitted%20an%20enquiry%20for%20${encodeURIComponent(cleanReq)}." target="_blank" rel="noopener" class="yug-bot-action-btn yug-bot-wa-btn">
+                            <a href="https://wa.me/919158308156?text=Hi%2C%20I%20just%20submitted%20an%20enquiry%20for%20${encodeURIComponent(cleanReq)}." target="_blank" rel="noopener" class="yug-bot-action-btn yug-bot-wa-btn">
                                 💬 WhatsApp
                             </a>
                         </div>
@@ -624,15 +624,15 @@
             addBotMessage(
                 `Sure! Please provide your details below and our team will prepare a custom quotation and arrange a live product demo for you:`,
                 [
-                    { label: '📞 Call Directly: +91 7387829461', action: 'call_helpline' }
+                    { label: '📞 Call Directly: +91 9158308156', action: 'call_helpline' }
                 ],
                 true,
                 chip.requirement || '4 SIM IVR'
             );
         } else if (chip.action === 'call_helpline') {
-            window.location.href = 'tel:+917387829461';
+            window.location.href = 'tel:+919158308156';
         } else if (chip.action === 'open_whatsapp') {
-            window.open('https://wa.me/917387829461?text=Hi%2C%20I%20am%20interested%20in%20Yug%20Smart%20IVR%20solutions.', '_blank', 'noopener');
+            window.open('https://wa.me/919158308156?text=Hi%2C%20I%20am%20interested%20in%20Yug%20Smart%20IVR%20solutions.', '_blank', 'noopener');
         } else if (chip.action === 'open_gallery_1') {
             if (typeof window.openInteractive360 === 'function') {
                 window.openInteractive360('1-sim', 0);

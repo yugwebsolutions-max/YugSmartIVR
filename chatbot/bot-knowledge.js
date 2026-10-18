@@ -9,7 +9,7 @@
  *  - Inbound & Outbound Calling, Multi-level IVR, Routing
  *  - Business Applications & Industry Recommendations
  *  - Warranty (1-Year Replacement), Shipping (5-8 days, ₹100-150), Return Policies
- *  - Direct Contact Info (+91 7387829461, yugwebsolutions@gmail.com)
+ *  - Direct Contact Info (+91 9158308156, yugwebsolutions@gmail.com)
  *  - Smart Intent Matcher with score ranking & suggestion chips
  * ============================================================================
  */
@@ -21,9 +21,9 @@
         meta: {
             brandName: 'Yug Smart IVR',
             company: 'Yug Web Solutions',
-            phone: '+91 7387829461',
+            phone: '+91 9158308156',
             email: 'yugwebsolutions@gmail.com',
-            whatsapp: 'https://wa.me/917387829461?text=Hi%2C%20I%20am%20interested%20in%20Yug%20Smart%20IVR%20solutions.',
+            whatsapp: 'https://wa.me/919158308156?text=Hi%2C%20I%20am%20interested%20in%20Yug%20Smart%20IVR%20solutions.',
             warranty: '1-Year Full Replacement Warranty for any technical defect (from purchase & activation date)',
             shipping: '₹100 - ₹150 per device depending on pin code. Delivery in 5-8 business days across India.',
             refundPolicy: 'No return or refund after sale. However, full replacement is provided under the 1-year warranty for technical issues.'
@@ -62,7 +62,7 @@ Prices vary based on whether you need a **1 SIM, 2 SIM, 4 SIM, or 8 SIM** config
                 triggerForm: true,
                 chips: [
                     { label: '📱 Compare Models First', query: 'Which model should I choose?' },
-                    { label: '📞 Call Now: +91 7387829461', action: 'call_helpline' }
+                    { label: '📞 Call Now: +91 9158308156', action: 'call_helpline' }
                 ]
             },
 
@@ -326,7 +326,7 @@ Our technical support team assists you with setup and configuration!`,
 • **Pre-Purchase Demo**: We offer full live software and hardware demos before you buy so you can be completely confident in your purchase!`,
                 chips: [
                     { label: '📝 Request Free Demo First', action: 'show_lead_form' },
-                    { label: '📞 Call: +91 7387829461', action: 'call_helpline' }
+                    { label: '📞 Call: +91 9158308156', action: 'call_helpline' }
                 ]
             },
 
@@ -357,15 +357,15 @@ Our technical support team assists you with setup and configuration!`,
                 keywords: ['contact', 'phone', 'mobile', 'call', 'number', 'email', 'address', 'location', 'where are you', 'support', 'help'],
                 response: `📞 **Yug Web Solutions - Contact Information:**
 
-• **Sales & Technical Helpline**: **+91 7387829461**
+• **Sales & Technical Helpline**: **+91 9158308156**
 • **Official Email**: **yugwebsolutions@gmail.com**
-• **WhatsApp Support**: **+91 7387829461**
+• **WhatsApp Support**: **+91 9158308156**
 • **Support Hours**: Monday to Saturday, 9:30 AM – 7:00 PM IST
 • **Location**: India
 
 You can call us directly or drop your query below and our team will get in touch immediately!`,
                 chips: [
-                    { label: '📞 Call +91 7387829461', action: 'call_helpline' },
+                    { label: '📞 Call +91 9158308156', action: 'call_helpline' },
                     { label: '💬 WhatsApp Chat', action: 'open_whatsapp' },
                     { label: '📝 Submit Enquiry', action: 'show_lead_form' }
                 ]
@@ -405,7 +405,7 @@ Here are some common topics you can ask me:`,
                 { label: '📱 Compare 1, 2, 4 & 8 SIM', query: 'Compare all models' },
                 { label: '⚡ 4 Modes in 1 Device', query: 'Explain 4 modes' },
                 { label: '🛡️ Warranty & Delivery', query: 'Warranty and shipping' },
-                { label: '📞 Call Specialist: +91 7387829461', action: 'call_helpline' }
+                { label: '📞 Call Specialist: +91 9158308156', action: 'call_helpline' }
             ]
         }
     };

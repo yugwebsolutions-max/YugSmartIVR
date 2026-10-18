@@ -76,7 +76,7 @@
                 mobile: lead.mobile,
                 email: lead.email || 'Not Provided',
                 requirement: lead.requirement || 'IVR Solution',
-                directCall: '+91 7387829461',
+                directCall: '+91 9158308156',
                 source: lead.source || window.location.href,
                 status: 'Dispatched to ' + LEAD_CONFIG.recipientEmail
             };
@@ -243,7 +243,7 @@
                     formData.append('Customer Mobile Number', '+91 ' + cleanMobile);
                     formData.append('Requirement', cleanReq);
                     formData.append('Customer Email', (cleanEmail && cleanEmail !== 'Not Provided') ? cleanEmail : 'Not Provided');
-                    formData.append('Direct Call', '+91 7387829461');
+                    formData.append('Direct Call', '+91 9158308156');
                     formData.append('Submission Time', timestamp);
                     formData.append('Brand & Product', `${LEAD_CONFIG.productName} by ${LEAD_CONFIG.companyName}`);
                     formData.append('Source', cleanSource);
