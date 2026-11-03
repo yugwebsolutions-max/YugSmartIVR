@@ -46,7 +46,7 @@ This guide walks you through setting up your **Google Sheet** as the permanent, 
 
 ### Step 5: Connect URL in CRM Dashboard
 1. Open your CRM Portal at `/crm` (or `https://yugsmartivr.com/crm`).
-2. Log in (`YugIVR` / `jay#1234.`).
+2. Log in (`yugivr` / `jay#1234.`).
 3. Click the **Google Sheet** button in the top action bar.
 4. Paste your Web App URL into the input field.
 5. Click **Test Connection** — it will verify with a green message: `✅ Connected!`.

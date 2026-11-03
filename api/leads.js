@@ -5,7 +5,7 @@
  * Endpoint: /api/leads
  * 
  * Features:
- * - Admin Authentication & Token Verification (default: YugIVR / jay#1234.)
+ * - Admin Authentication & Token Verification (default: yugivr / jay#1234.)
  * - Multi-layer Lead Persistence (KV / Upstash / Blob / local JSON)
  * - CRUD operations for Leads (List, Add, Update Status, Add Notes, Delete)
  * - Simultaneous Real-time Sync for CRM Dashboard
@@ -17,7 +17,7 @@ const path = require('path');
 
 // Security & Configuration
 const ADMIN_CONFIG = {
-    username: process.env.CRM_USERNAME || 'YugIVR',
+    username: process.env.CRM_USERNAME || 'yugivr',
     password: process.env.CRM_PASSWORD || 'jay#1234.',
     secretToken: process.env.CRM_SECRET_TOKEN || 'yug_crm_sec_2026_tok',
     recipientEmail: process.env.LEAD_RECIPIENT_EMAIL || 'yugwebsolutions@gmail.com'
