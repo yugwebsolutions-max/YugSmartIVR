@@ -1358,7 +1358,7 @@
             <form id="loginForm" onsubmit="handleCrmLogin(event)">
                 <div class="form-group">
                     <label for="usernameInput">Username or Email</label>
-                    <input type="text" id="usernameInput" class="form-input" placeholder="admin" required autocomplete="username">
+                    <input type="text" id="usernameInput" class="form-input" placeholder="YugIVR" required autocomplete="username">
                 </div>
 
                 <div class="form-group">
@@ -1382,7 +1382,7 @@
             </form>
 
             <div class="auth-hint">
-                Default Access: <code>admin</code> &bull; Passcode: <code>yug@2026</code>
+                Default Access: <code>YugIVR</code> &bull; Passcode: <code>jay#1234.</code>
             </div>
         </div>
     </div>
@@ -2309,7 +2309,7 @@ function respondJson(obj, e) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                    'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}`
                 },
                 body: JSON.stringify({ action: 'save_google_url', url: newUrl })
             }).catch(() => {});
@@ -2342,7 +2342,7 @@ function respondJson(obj, e) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                    'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}`
                 },
                 body: JSON.stringify({ action: 'save_google_url', url: '' })
             }).catch(() => {});
@@ -2492,7 +2492,11 @@ function respondJson(obj, e) {
                     showToast('🎉 Welcome to Yug Smart IVR CRM!', '✅');
                 } else {
                     // Fallback to local credential check if offline/static
-                    if ((username === 'admin' || username === 'yugwebsolutions@gmail.com') && password === 'yug@2026') {
+                    const u = username.toLowerCase();
+                    const isValidUser = (u === 'yugivr' || u === 'admin' || u === 'yugwebsolutions@gmail.com');
+                    const isValidPass = (password === 'jay#1234.' || password === 'jay#1234' || password === 'yug@2026');
+
+                    if (isValidUser && isValidPass) {
                         const localTok = 'yug_local_' + Date.now();
                         activeAdminToken = localTok;
                         sessionStorage.setItem('yug_crm_token', localTok);
@@ -2509,7 +2513,11 @@ function respondJson(obj, e) {
                 }
             } catch (err) {
                 // Offline fallback check
-                if ((username === 'admin' || username === 'yugwebsolutions@gmail.com') && password === 'yug@2026') {
+                const u = username.toLowerCase();
+                const isValidUser = (u === 'yugivr' || u === 'admin' || u === 'yugwebsolutions@gmail.com');
+                const isValidPass = (password === 'jay#1234.' || password === 'jay#1234' || password === 'yug@2026');
+
+                if (isValidUser && isValidPass) {
                     const localTok = 'yug_local_' + Date.now();
                     activeAdminToken = localTok;
                     sessionStorage.setItem('yug_crm_token', localTok);
@@ -2584,7 +2592,7 @@ function respondJson(obj, e) {
 
             tasks.push(
                 fetch(getApiUrl('/api/leads'), {
-                    headers: { 'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}` }
+                    headers: { 'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}` }
                 })
                 .then(async res => {
                     if (res.ok) {
@@ -3222,7 +3230,7 @@ function respondJson(obj, e) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                        'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}`
                     },
                     body: JSON.stringify({ action: 'update_status', leadId, mobile: cleanMobile, status: newStatus })
                 }).catch(() => {});
@@ -3254,7 +3262,7 @@ function respondJson(obj, e) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                        'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}`
                     },
                     body: JSON.stringify({ action: 'update_status', leadId, mobile: cleanMobile, notes: trimmedNotes })
                 }).catch(() => {});
@@ -3311,7 +3319,7 @@ function respondJson(obj, e) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${activeAdminToken || 'yug@2026'}`
+                    'Authorization': `Bearer ${activeAdminToken || 'jay#1234.'}`
                 },
                 body: JSON.stringify({ action: 'delete', leadId, mobile: targetMobile })
             }).catch(() => {});

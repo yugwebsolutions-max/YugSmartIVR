@@ -5,7 +5,7 @@
  * Endpoint: /api/leads
  * 
  * Features:
- * - Admin Authentication & Token Verification (default: admin / yug@2026)
+ * - Admin Authentication & Token Verification (default: YugIVR / jay#1234.)
  * - Multi-layer Lead Persistence (KV / Upstash / Blob / local JSON)
  * - CRUD operations for Leads (List, Add, Update Status, Add Notes, Delete)
  * - Simultaneous Real-time Sync for CRM Dashboard
@@ -17,8 +17,8 @@ const path = require('path');
 
 // Security & Configuration
 const ADMIN_CONFIG = {
-    username: process.env.CRM_USERNAME || 'admin',
-    password: process.env.CRM_PASSWORD || 'yug@2026',
+    username: process.env.CRM_USERNAME || 'YugIVR',
+    password: process.env.CRM_PASSWORD || 'jay#1234.',
     secretToken: process.env.CRM_SECRET_TOKEN || 'yug_crm_sec_2026_tok',
     recipientEmail: process.env.LEAD_RECIPIENT_EMAIL || 'yugwebsolutions@gmail.com'
 };
@@ -143,7 +143,7 @@ function isAuthorized(req) {
     if (!token) return false;
 
     // Direct Passcode Support (for simple API access or admin scripts)
-    if (token === ADMIN_CONFIG.password || token === 'yug@2026' || token === 'admin7387') {
+    if (token === ADMIN_CONFIG.password || token === 'jay#1234.' || token === 'jay#1234' || token === 'yug@2026' || token === 'admin7387') {
         return true;
     }
 
@@ -201,11 +201,22 @@ module.exports = async function handler(req, res) {
     if (req.method === 'POST' && action === 'login') {
         const username = String(body.username || '').trim();
         const password = String(body.password || '').trim();
+        const u = username.toLowerCase();
 
-        if (
-            (username.toLowerCase() === ADMIN_CONFIG.username.toLowerCase() || username.toLowerCase() === 'yugwebsolutions@gmail.com') &&
-            (password === ADMIN_CONFIG.password || password === 'yug@2026')
-        ) {
+        const isValidUser = (
+            u === ADMIN_CONFIG.username.toLowerCase() ||
+            u === 'yugivr' ||
+            u === 'admin' ||
+            u === 'yugwebsolutions@gmail.com'
+        );
+        const isValidPass = (
+            password === ADMIN_CONFIG.password ||
+            password === 'jay#1234.' ||
+            password === 'jay#1234' ||
+            password === 'yug@2026'
+        );
+
+        if (isValidUser && isValidPass) {
             const token = generateAuthToken();
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({

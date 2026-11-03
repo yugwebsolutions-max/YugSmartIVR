@@ -276,7 +276,7 @@
         authenticateAdmin: function() {
             const code = window.prompt('Enter Administrator Security Passcode to access records:');
             // Default security passcode (can be configured)
-            if (code === 'yug@2026' || code === 'admin7387') {
+            if (code === 'jay#1234.' || code === 'jay#1234' || code === 'yug@2026' || code === 'admin7387') {
                 return true;
             }
             window.alert('Access Denied: Invalid administrator passcode.');
